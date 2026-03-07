@@ -1,0 +1,20 @@
+{
+    "original_image_path": "/root/autodl-tmp/data/SAM3_data/AMOS2022/image/x/amos_0551_10.png",
+    "output_image_path": "/root/autodl-tmp/work/sam3_med_agent_eval/outputs/AMOS2022_test50/per_case/amos_0551_10/sam_out/-root-autodl-tmp-data-SAM3_data-AMOS2022-image-x-amos_0551_10.png/right kidney.png",
+    "orig_img_h": 468,
+    "orig_img_w": 576,
+    "pred_boxes": [
+        [
+            0.6587321162223816,
+            0.3598451018333435,
+            0.05855119228363037,
+            0.06542971730232239
+        ]
+    ],
+    "pred_masks": [
+        "m\\]52`>3L3N3M2N3N1O1O1O2N1O1O1O1O100O10O01O10O010O10000O100O1O1O1O2N2N3L4FQlY2"
+    ],
+    "pred_scores": [
+        0.65234375
+    ]
+}

@@ -1,0 +1,201 @@
+现在我需要迁移SAM3+AGENT到医学多轮推理分割领域。目前数据已经准备妥当，数据路径在/root/autodl-tmp/data下，data下的具体内容如图所示，总共有七个数据集，图中展示了AMOS2022这个数据集中的内容，其他的数据集的结构和这个完全一致。其中image中存放的是大量原始的医学png格式图像，比如：/root/autodl-tmp/data/SAM3_data/AMOS2022/image/x/amos_0507_0.png；label中含有的是大量每个图像对应的掩码标签，里面每个文件是npz格式，比如：/root/autodl-tmp/data/SAM3_data/AMOS2022/label/x___amos_0507_0.(15, 290, 320, 1).npz，npz的命名中，体现出对应的png文件的路径之间的关系，其中(15, 290, 320, 1)说明了其中存放的数据的格式，是四维的，其中15说明了一张图最多有15个标签掩码，290*32对应了png图像的像素，这样就可以通过每个掩码在对应像素点上的0和1表示当前像素点上是否有对应标签的掩码；/root/autodl-tmp/data/SAM3_data/AMOS2022/overlay_output中的是对应的每张png图像的掩码可视化显示图像，其中不同的掩码用不同的颜色进行了表示，但是这个文件后期会很少用到，只是用于人工对照分割效果；重要的是MultiEN_AMOS2022.json这个文件，里面的部分内容如下面所示，其中"labels"中的内容对应的x___amos_0507_0.(15, 290, 320, 1).npz中的15个掩码标签以及每个掩码标签的名字，其中 "label": "label/x___amos_0507_0.(15, 290, 320, 1).npz"和"image": "image/x/amos_0507_0.png"这两个字段是匹配的，里面列出了具体的路径，后续你可以优先提取这两个字段来匹配图像和标签，其中"questions"中的内容是多轮对话内容，其中需要模型根据"question"中的文本内容分割出对象，正确分割的对象的标签是"label"中的内容，具体对应npz的哪一个通道可以通过"labels"字段来匹配。现在我需要你改造SAM3+AGENT代码来进行批量测试，测试在医学推理分割中的效果，注意丢给AGENT的内容除了当前轮次的文本和图像，还应该包含之前轮次的历史对话文本。现在请给我你的解决方法和具体步骤，待我确认后再进行下一步的操作。
+{
+  "name": "AMOS",
+  "statistic data": {
+    "question_count": 20776,
+    "label_counts": {
+      "spleen": 1879,
+      "kidney_left": 1465,
+      "aorta": 2553,
+      "inferior_vena_cava": 1988,
+      "kidney_right": 1514,
+      "duodenum": 1463,
+      "liver": 3132,
+      "pancreas": 1553,
+      "adrenal_gland_left": 663,
+      "adrenal_gland_right": 615,
+      "stomach": 2009,
+      "gallbladder": 869,
+      "esophagus": 939,
+      "单标签追问": 64,
+      "bladder": 70
+    },
+    "questions_length_counts": {
+      "4": 443,
+      "5": 406,
+      "6": 526,
+      "7": 345,
+      "8": 260,
+      "9": 228,
+      "10": 280,
+      "11": 179,
+      "12": 38,
+      "2": 464,
+      "3": 343,
+      "1": 63,
+      "13": 2
+    },
+    "min_area": 1,
+    "max_area": 31384,
+    "text_statistics": {
+      "count_mode": "english",
+      "question": {
+        "min_length": 8,
+        "max_length": 64,
+        "avg_length": 27.86
+      },
+      "answer": {
+        "min_length": 9,
+        "max_length": 71,
+        "avg_length": 20.67
+      }
+    }
+  },
+  "description": "mr_unknown_AMOS2 (已增强器官属性信息)",
+  "dimension": "2D",
+  "modality": {
+    "0": "MR"
+  },
+  "labels": {
+    "0": "background",
+    "1": "spleen",
+    "2": "kidney_right",
+    "3": "kidney_left",
+    "4": "gallbladder",
+    "5": "esophagus",
+    "6": "liver",
+    "7": "stomach",
+    "8": "aorta",
+    "9": "inferior_vena_cava",
+    "10": "pancreas",
+    "11": "adrenal_gland_right",
+    "12": "adrenal_gland_left",
+    "13": "duodenum",
+    "14": "bladder"
+  },
+  "numTraining": 3155,
+  "training": [
+    {
+      "image": "image/x/amos_0507_0.png",
+      "image resolution": [
+        320,
+        290
+      ],
+      "label": "label/x___amos_0507_0.(15, 290, 320, 1).npz",
+      "imask": "imask/x___amos_0507_0.npy",
+      "class_ids": [
+        1,
+        3,
+        8,
+        9
+      ],
+      "questions": [
+        {
+          "question": "Please segment the structure on the left side of the image as a peripheral immune organ. It serves as the primary site for B-cell and T-cell residence and can generate immune responses to blood-borne antigens.",
+          "answer": "The spleen has been successfully segmented. This structure is an important peripheral immune organ involved in humoral immunity and complement synthesis.",
+          "id": "AMOS2022_00001",
+          "label": "spleen",
+          "referring label": "无",
+          "area": 167,
+          "area center": [
+            73.5,
+            156.9
+          ]
+        },
+        {
+          "question": "In the upper right direction of the spleen, there is an organ at the center of the image that regulates fluid balance, with blood flow accounting for about 1/4 of the total body volume. Please segment this structure.",
+          "answer": "The left kidney (kidney_left) has been successfully segmented. This organ maintains water-electrolyte balance through tubular reabsorption and concentration functions.",
+          "id": "AMOS2022_00002",
+          "label": "kidney_left",
+          "referring label": "spleen",
+          "area": 251,
+          "area center": [
+            106.9,
+            137.95
+          ]
+        },
+        {
+          "question": "There is an arterial structure located inferior and to the right of the left kidney. The vessel wall below the renal artery is relatively thin and prone to aneurysm formation. Please segment this blood vessel.",
+          "answer": "The abdominal aorta (aorta) has been successfully segmented. This vessel originates from the fusion of the dorsal aortae during the embryonic stage and serves as the main arterial trunk of the systemic circulation.",
+          "id": "AMOS2022_00003",
+          "label": "aorta",
+          "referring label": "kidney_left",
+          "area": 121,
+          "area center": [
+            155.69,
+            170.59
+          ]
+        },
+        {
+          "question": "A vein is visible on the right side of the abdominal aorta, and there may be an anatomical variation in the left renal vein (such as retroaortic type). Please segment this vessel.",
+          "answer": "The inferior vena cava (inferior_vena_cava) has been successfully segmented, which is formed by the developmental anastomosis of the vitelline veins and the cardinal venous system.",
+          "id": "AMOS2022_00004",
+          "label": "inferior_vena_cava",
+          "referring label": "aorta",
+          "area": 106,
+          "area center": [
+            173.95,
+            164.46
+          ]
+        }
+      ]
+    },
+……
+ ],
+  "numTest": 422,
+  "test": [
+    {
+      "image": "image/x/amos_0551_0.png",
+      "image resolution": [
+        576,
+        468
+      ],
+      "label": "label/x___amos_0551_0.(15, 468, 576, 1).npz",
+      "imask": "imask/x___amos_0551_0.npy",
+      "class_ids": [
+        8,
+        9,
+        13
+      ],
+      "questions": [
+        {
+          "question": "Please segment the most prominent large vascular structure in the center of the image, which enters the abdominal cavity at the diaphragm and descends along the left side of the spine.",
+          "answer": "As per your request, the aorta has been segmented. This is the largest artery in the human body, responsible for delivering oxygenated blood from the left ventricle to the entire body.",
+          "id": "AMOS2022_18420",
+          "label": "aorta",
+          "referring label": "无",
+          "area": 419,
+          "area center": [
+            293.9,
+            247.55
+          ]
+        },
+        {
+          "question": "Now please segment another important venous structure located to the right of the aorta, which courses posterior to the liver and opens into the right atrium.",
+          "answer": "As per your request, the inferior vena cava has been segmented. This is the largest vein in the human body, responsible for returning deoxygenated blood from the lower body to the right atrium.",
+          "id": "AMOS2022_18421",
+          "label": "inferior_vena_cava",
+          "referring label": "aorta",
+          "area": 274,
+          "area center": [
+            327.75,
+            238.48
+          ]
+        },
+        {
+          "question": "Next, please segment the C-shaped tubular structure located inferior and to the left of the inferior vena cava, which wraps around the head of the pancreas and is anchored by the ligament of Treitz.",
+          "answer": "As per your request, the duodenum has been segmented, which is the initial part of the small intestine and plays a crucial role in digestion and absorption.",
+          "id": "AMOS2022_18422",
+          "label": "duodenum",
+          "referring label": "inferior_vena_cava",
+          "area": 770,
+          "area center": [
+            316.7,
+            252.38
+          ]
+        }
+      ]
+    },
+……
+  ]
+}

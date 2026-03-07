@@ -1,0 +1,21 @@
+# filename: .gitignore
+# 先忽略所有内容
+*
+
+# 允许当前目录下的 .gitignore 自己被跟踪
+!.gitignore
+
+# 允许这几个脚本
+!set_hf_cache_env.sh
+!start_test.sh
+!start_vllm_qwen3vl.sh
+
+# 允许这几个目录本身
+!repos/
+!temp_work/
+!work/
+
+# 允许这几个目录中的所有内容
+!repos/**
+!temp_work/**
+!work/**

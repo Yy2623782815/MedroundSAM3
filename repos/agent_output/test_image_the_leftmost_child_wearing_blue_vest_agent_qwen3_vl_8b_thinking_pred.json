@@ -1,0 +1,21 @@
+{
+    "original_image_path": "/root/autodl-tmp/repos/sam3/assets/images/test_image.jpg",
+    "orig_img_h": 720,
+    "orig_img_w": 1280,
+    "pred_boxes": [
+        [
+            0.4539627134799957,
+            0.5077325105667114,
+            0.10636433959007263,
+            0.3531454801559448
+        ]
+    ],
+    "pred_scores": [
+        0.94140625
+    ],
+    "pred_masks": [
+        "\\ei<:Sf09G5M3L4L4L4L3f]OmNT?V1h@mNV?U1h@mNV?U1g@nNW?T1f@nN_>De_Oa1j1lNZ>Li_OZ1i1lN\\>Nh_OY1i1kN[>1i_OW1h1jN]>2i_OV1h1iN]>4i_OV1g1gN^>6i_OW1d1dN`>:k_OZ1\\1]Ng><k_OY1[1\\Nj>Q3TAQMi>R3TAQMj>Q3SARMj>[1U@POm0Jl>W1Y@nNh0Nm>U1[@mNe02GaNa>b2SAlNa04GcNc>^2VA]MJY1d0;FeNd>_2SAYM0X1a0<GeNd>f2RA]N>;IdNf>^6XAdIg>k2TA73oLh>f2]A8HUMj>i2WAi0h>`301N1O100O100O10O0100O0100O10000O1O100O100_O]ATId>i6dAnH`>n6c0L4N1K6\\N^@ULg?i3`@dKn?[4W@WKS`0g4l0N2O1O1O1O1N2O2N1O1O2N2N1O2M3M2M4M3M3M3L4J6K6K5K6J5L5K4J6J7H8L6J;F2N2N1O1O1000P\\OTOZb0l0S]OVOZO4cc0e0n\\ONSc02j\\O1Vc0Oh\\O2Yc0Nd\\O4]c0Kb\\O7^c0I`\\O8`c0I_\\O7bc0I\\\\O8ec0Y11N2O1O0O2N2N2O0O2L4I7M3N2M4L4K4K6J7I`0@eS\\<"
+    ],
+    "text_prompt": "the leftmost child wearing blue vest",
+    "image_path": "/root/autodl-tmp/repos/sam3/assets/images/test_image.jpg"
+}

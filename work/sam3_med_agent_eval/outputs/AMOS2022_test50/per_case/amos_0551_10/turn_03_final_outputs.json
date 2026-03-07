@@ -1,0 +1,19 @@
+{
+  "original_image_path": "/root/autodl-tmp/data/SAM3_data/AMOS2022/image/x/amos_0551_10.png",
+  "orig_img_h": 468,
+  "orig_img_w": 576,
+  "pred_boxes": [
+    [
+      0.4893352687358856,
+      0.48324066400527954,
+      0.043522149324417114,
+      0.05499005317687988
+    ]
+  ],
+  "pred_scores": [
+    0.8046875
+  ],
+  "pred_masks": [
+    "cSQ48Z>5L2N2N2N1O2O0O2O00000O2O0001O0O10001O1N1O3L4L4Klfj3"
+  ]
+}

@@ -1,0 +1,9 @@
+{
+    "original_image_path": "/root/autodl-tmp/data/SAM3_data/AMOS2022/image/x/amos_0551_0.png",
+    "output_image_path": "/root/autodl-tmp/work/sam3_med_agent_eval/outputs/AMOS2022_test50/per_case/amos_0551_0/sam_out/-root-autodl-tmp-data-SAM3_data-AMOS2022-image-x-amos_0551_0.png/duodenum.png",
+    "orig_img_h": 468,
+    "orig_img_w": 576,
+    "pred_boxes": [],
+    "pred_masks": [],
+    "pred_scores": []
+}

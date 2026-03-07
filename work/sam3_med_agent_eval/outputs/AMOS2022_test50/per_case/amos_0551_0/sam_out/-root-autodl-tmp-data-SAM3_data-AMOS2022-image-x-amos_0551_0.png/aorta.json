@@ -1,0 +1,20 @@
+{
+    "original_image_path": "/root/autodl-tmp/data/SAM3_data/AMOS2022/image/x/amos_0551_0.png",
+    "output_image_path": "/root/autodl-tmp/work/sam3_med_agent_eval/outputs/AMOS2022_test50/per_case/amos_0551_0/sam_out/-root-autodl-tmp-data-SAM3_data-AMOS2022-image-x-amos_0551_0.png/aorta.png",
+    "orig_img_h": 468,
+    "orig_img_w": 576,
+    "pred_boxes": [
+        [
+            0.49072304368019104,
+            0.5050228834152222,
+            0.04396829009056091,
+            0.049191296100616455
+        ]
+    ],
+    "pred_masks": [
+        "abQ48Y>5M2N2N1O2O0O2O00000000000000O101O001N101N2N3M4KlWj3"
+    ],
+    "pred_scores": [
+        0.73828125
+    ]
+}
