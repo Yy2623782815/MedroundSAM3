@@ -1,0 +1,439 @@
+1、对per_case每个的结果缓存的json应该加上dice和iou字段
+2、all_datasets_summary.json中每个数据集应该添加几个字段，对"by_label"和"by_turn"中的每个对象增加max_dice,min_dice,max_iou,min_iou;对"by_label"和"by_turn"中的每个对象再加一个字段，统计每个对象中，sam3没有返回分割对象的数目
+3、增加选项，选择是对training、test、all（包含traing和test）进行测试，如果是traing或test，可以选择最多测验的数目或者选择traing或test中的所有数目
+4、per_case中的每个图像应该是两张图横向拼接在一块，一张图是当前代码中产生的预测掩码叠加的图像，另一张图是将实际标签掩码叠加的图像，图像下面小字说明是label还是predict。（如果需要改动其他的代码，请提出来）
+修改下述代码，需求如上
+# filename: /root/autodl-tmp/work/sam3_gt_label_eval/eval_sam3_gt_label_batch.py
+import argparse
+import json
+import os
+import traceback
+from collections import defaultdict
+
+import numpy as np
+import torch
+from PIL import Image
+from sam3 import build_sam3_image_model
+from sam3.model.box_ops import box_xyxy_to_xywh
+from sam3.model.sam3_image_processor import Sam3Processor
+from sam3.train.masks_ops import rle_encode
+
+from med_data_utils import (
+    build_label_name_to_index,
+    case_identifier_from_item,
+    ensure_dir,
+    get_split_items,
+    load_dataset_json,
+    load_gt_mask_from_npz,
+    resolve_abs_path,
+    resolve_dataset_json_path,
+    union_pred_masks,
+)
+from metrics import dice_score, iou_score
+from viz import visualize
+
+
+def build_sam3_processor():
+    torch.backends.cuda.matmul.allow_tf32 = True
+    torch.backends.cudnn.allow_tf32 = True
+    torch.autocast("cuda", dtype=torch.bfloat16).__enter__()
+    torch.inference_mode().__enter__()
+
+    bpe_path = "/root/autodl-tmp/repos/sam3/sam3/assets/bpe_simple_vocab_16e6.txt.gz"
+    ckpt_path = "/root/autodl-tmp/models/sam3_base/sam3.pt"
+
+    model = build_sam3_image_model(
+        bpe_path=bpe_path,
+        checkpoint_path=ckpt_path,
+        load_from_HF=False,
+        device="cuda",
+        eval_mode=True,
+    )
+    processor = Sam3Processor(model, confidence_threshold=0.5)
+    return processor
+
+
+def sam3_text_inference(processor: Sam3Processor, image_path: str, text_prompt: str):
+    image = Image.open(image_path).convert("RGB")
+    orig_w, orig_h = image.size
+
+    inference_state = processor.set_image(image)
+    processor.reset_all_prompts(inference_state)
+    inference_state = processor.set_text_prompt(
+        state=inference_state,
+        prompt=text_prompt,
+    )
+
+    boxes_xyxy = inference_state["boxes"]
+    scores = inference_state["scores"]
+    masks = inference_state["masks"]
+
+    if boxes_xyxy.numel() == 0:
+        return {
+            "original_image_path": image_path,
+            "orig_img_h": orig_h,
+            "orig_img_w": orig_w,
+            "pred_boxes": [],
+            "pred_scores": [],
+            "pred_masks": [],
+        }
+
+    pred_boxes_xyxy = torch.stack(
+        [
+            boxes_xyxy[:, 0] / orig_w,
+            boxes_xyxy[:, 1] / orig_h,
+            boxes_xyxy[:, 2] / orig_w,
+            boxes_xyxy[:, 3] / orig_h,
+        ],
+        dim=-1,
+    )
+    pred_boxes_xywh = box_xyxy_to_xywh(pred_boxes_xyxy).tolist()
+
+    pred_masks = rle_encode(masks.squeeze(1))
+    pred_masks = [m["counts"] for m in pred_masks]
+    pred_scores = scores.tolist()
+
+    score_indices = sorted(
+        range(len(pred_scores)),
+        key=lambda i: pred_scores[i],
+        reverse=True,
+    )
+    pred_scores = [pred_scores[i] for i in score_indices]
+    pred_boxes_xywh = [pred_boxes_xywh[i] for i in score_indices]
+    pred_masks = [pred_masks[i] for i in score_indices]
+
+    valid_masks = []
+    valid_boxes = []
+    valid_scores = []
+    for i, rle in enumerate(pred_masks):
+        if isinstance(rle, str) and len(rle) > 4:
+            valid_masks.append(rle)
+            valid_boxes.append(pred_boxes_xywh[i])
+            valid_scores.append(pred_scores[i])
+
+    return {
+        "original_image_path": image_path,
+        "orig_img_h": orig_h,
+        "orig_img_w": orig_w,
+        "pred_boxes": valid_boxes,
+        "pred_scores": valid_scores,
+        "pred_masks": valid_masks,
+    }
+
+
+def summarize_results(records):
+    summary = {
+        "num_records": len(records),
+        "mean_dice": None,
+        "mean_iou": None,
+        "num_failures": 0,
+        "by_label": {},
+        "by_turn": {},
+        "failure_reasons": {},
+    }
+
+    if not records:
+        return summary
+
+    valid = [r for r in records if r.get("status") == "ok"]
+    failures = [r for r in records if r.get("status") != "ok"]
+    summary["num_failures"] = len(failures)
+
+    if valid:
+        summary["mean_dice"] = float(np.mean([r["dice"] for r in valid]))
+        summary["mean_iou"] = float(np.mean([r["iou"] for r in valid]))
+
+        by_label = defaultdict(list)
+        by_turn = defaultdict(list)
+
+        for r in valid:
+            by_label[r["gt_label"]].append(r)
+            by_turn[r["turn_idx"]].append(r)
+
+        for label, items in by_label.items():
+            summary["by_label"][label] = {
+                "count": len(items),
+                "mean_dice": float(np.mean([x["dice"] for x in items])),
+                "mean_iou": float(np.mean([x["iou"] for x in items])),
+            }
+
+        for turn_idx, items in by_turn.items():
+            summary["by_turn"][str(turn_idx)] = {
+                "count": len(items),
+                "mean_dice": float(np.mean([x["dice"] for x in items])),
+                "mean_iou": float(np.mean([x["iou"] for x in items])),
+            }
+
+    failure_reasons = defaultdict(int)
+    for r in failures:
+        failure_reasons[r.get("error_type", "unknown_error")] += 1
+    summary["failure_reasons"] = dict(failure_reasons)
+
+    return summary
+
+
+def evaluate_one_dataset(
+    processor,
+    data_root: str,
+    dataset_name: str,
+    split: str,
+    max_samples: int,
+    output_dir: str,
+):
+    dataset_root = os.path.join(data_root, dataset_name)
+    dataset_json_path = resolve_dataset_json_path(data_root, dataset_name)
+    dataset_json = load_dataset_json(dataset_json_path)
+    label_name_to_idx = build_label_name_to_index(dataset_json)
+
+    split_items = get_split_items(dataset_json, split)
+    if max_samples is not None and max_samples > 0:
+        split_items = split_items[:max_samples]
+
+    ensure_dir(output_dir)
+    per_case_root = os.path.join(output_dir, "per_case")
+    ensure_dir(per_case_root)
+
+    results_jsonl_path = os.path.join(output_dir, "results.jsonl")
+    records = []
+
+    with open(results_jsonl_path, "w", encoding="utf-8") as fout:
+        for sample_idx, item in enumerate(split_items):
+            case_id = case_identifier_from_item(item)
+            image_path = resolve_abs_path(dataset_root, item["image"])
+            label_npz_path = resolve_abs_path(dataset_root, item["label"])
+            questions = item["questions"]
+
+            case_out_dir = os.path.join(per_case_root, case_id)
+            ensure_dir(case_out_dir)
+
+            print("\n" + "=" * 80)
+            print(
+                f"[{dataset_name}] [Sample {sample_idx + 1}/{len(split_items)}] "
+                f"case_id={case_id}"
+            )
+            print(f"image_path={image_path}")
+            print(f"label_npz_path={label_npz_path}")
+            print("=" * 80)
+
+            for turn_idx, qobj in enumerate(questions):
+                gt_label_name = qobj["label"]
+                question_id = qobj.get("id", f"{case_id}_turn_{turn_idx + 1}")
+                current_question = qobj["question"]
+                prompt = gt_label_name
+
+                if gt_label_name not in label_name_to_idx:
+                    record = {
+                        "status": "error",
+                        "error_type": "gt_label_not_found",
+                        "dataset": dataset_name,
+                        "split": split,
+                        "case_id": case_id,
+                        "sample_idx": sample_idx,
+                        "turn_idx": turn_idx + 1,
+                        "question_id": question_id,
+                        "gt_label": gt_label_name,
+                        "image_path": image_path,
+                        "label_npz_path": label_npz_path,
+                        "current_question": current_question,
+                        "prompt": prompt,
+                        "error": f"GT label '{gt_label_name}' not found in top-level labels",
+                    }
+                    fout.write(json.dumps(record, ensure_ascii=False) + "\n")
+                    fout.flush()
+                    records.append(record)
+                    continue
+
+                gt_channel_idx = label_name_to_idx[gt_label_name]
+
+                try:
+                    final_outputs = sam3_text_inference(
+                        processor=processor,
+                        image_path=image_path,
+                        text_prompt=prompt,
+                    )
+
+                    height = int(final_outputs["orig_img_h"])
+                    width = int(final_outputs["orig_img_w"])
+                    pred_mask = union_pred_masks(
+                        final_outputs["pred_masks"], height, width
+                    )
+                    gt_mask = load_gt_mask_from_npz(label_npz_path, gt_channel_idx)
+
+                    if gt_mask.shape != pred_mask.shape:
+                        raise ValueError(
+                            f"Shape mismatch: pred={pred_mask.shape}, gt={gt_mask.shape}, "
+                            f"case_id={case_id}, turn_idx={turn_idx + 1}"
+                        )
+
+                    dice = dice_score(pred_mask, gt_mask)
+                    iou = iou_score(pred_mask, gt_mask)
+
+                    record = {
+                        "status": "ok",
+                        "dataset": dataset_name,
+                        "split": split,
+                        "case_id": case_id,
+                        "sample_idx": sample_idx,
+                        "turn_idx": turn_idx + 1,
+                        "question_id": question_id,
+                        "gt_label": gt_label_name,
+                        "gt_channel_idx": gt_channel_idx,
+                        "image_path": image_path,
+                        "label_npz_path": label_npz_path,
+                        "current_question": current_question,
+                        "prompt": prompt,
+                        "num_pred_masks": len(final_outputs["pred_masks"]),
+                        "dice": dice,
+                        "iou": iou,
+                        "pred_scores": final_outputs.get("pred_scores", []),
+                        "pred_boxes": final_outputs.get("pred_boxes", []),
+                    }
+
+                    turn_debug_json = os.path.join(
+                        case_out_dir, f"turn_{turn_idx + 1:02d}_final_outputs.json"
+                    )
+                    with open(turn_debug_json, "w", encoding="utf-8") as tf:
+                        json.dump(final_outputs, tf, indent=2, ensure_ascii=False)
+
+                    turn_vis_png = os.path.join(
+                        case_out_dir, f"turn_{turn_idx + 1:02d}_pred.png"
+                    )
+                    vis_image = visualize(final_outputs)
+                    vis_image.save(turn_vis_png)
+
+                except Exception as e:
+                    record = {
+                        "status": "error",
+                        "error_type": "runtime_error",
+                        "dataset": dataset_name,
+                        "split": split,
+                        "case_id": case_id,
+                        "sample_idx": sample_idx,
+                        "turn_idx": turn_idx + 1,
+                        "question_id": question_id,
+                        "gt_label": gt_label_name,
+                        "gt_channel_idx": gt_channel_idx,
+                        "image_path": image_path,
+                        "label_npz_path": label_npz_path,
+                        "current_question": current_question,
+                        "prompt": prompt,
+                        "error": str(e),
+                        "traceback": traceback.format_exc(),
+                    }
+
+                fout.write(json.dumps(record, ensure_ascii=False) + "\n")
+                fout.flush()
+                records.append(record)
+
+                if record["status"] == "ok":
+                    print(
+                        f"[OK] dataset={dataset_name} case={case_id} turn={turn_idx + 1} "
+                        f"label={gt_label_name} prompt={prompt} "
+                        f"dice={record['dice']:.4f} iou={record['iou']:.4f} "
+                        f"num_pred_masks={record['num_pred_masks']}"
+                    )
+                else:
+                    print(
+                        f"[ERROR] dataset={dataset_name} case={case_id} turn={turn_idx + 1} "
+                        f"label={gt_label_name} prompt={prompt} "
+                        f"err={record['error']}"
+                    )
+
+    summary = summarize_results(records)
+    summary["dataset"] = dataset_name
+    summary["split"] = split
+    summary["max_samples"] = max_samples
+
+    summary_path = os.path.join(output_dir, "summary.json")
+    with open(summary_path, "w", encoding="utf-8") as f:
+        json.dump(summary, f, indent=2, ensure_ascii=False)
+
+    print(f"\n[{dataset_name}] Evaluation done.")
+    print(f"Results saved to: {results_jsonl_path}")
+    print(f"Summary saved to: {summary_path}")
+    print(json.dumps(summary, indent=2, ensure_ascii=False))
+
+    return records, summary
+
+
+def aggregate_dataset_summaries(dataset_summaries):
+    agg = {
+        "num_datasets": len(dataset_summaries),
+        "datasets": {},
+        "overall_mean_dice_macro": None,
+        "overall_mean_iou_macro": None,
+    }
+
+    if not dataset_summaries:
+        return agg
+
+    mean_dices = []
+    mean_ious = []
+
+    for ds_name, ds_summary in dataset_summaries.items():
+        agg["datasets"][ds_name] = ds_summary
+        if ds_summary.get("mean_dice") is not None:
+            mean_dices.append(ds_summary["mean_dice"])
+        if ds_summary.get("mean_iou") is not None:
+            mean_ious.append(ds_summary["mean_iou"])
+
+    if mean_dices:
+        agg["overall_mean_dice_macro"] = float(np.mean(mean_dices))
+    if mean_ious:
+        agg["overall_mean_iou_macro"] = float(np.mean(mean_ious))
+
+    return agg
+
+
+def parse_args():
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--data_root", type=str, required=True)
+    parser.add_argument(
+        "--datasets",
+        type=str,
+        nargs="+",
+        required=True,
+        help="One or more dataset names, e.g. AMOS2022 BraTS CHAOS",
+    )
+    parser.add_argument("--split", type=str, default="test")
+    parser.add_argument("--max_samples", type=int, default=50)
+    parser.add_argument("--output_dir", type=str, required=True)
+    return parser.parse_args()
+
+
+def main():
+    args = parse_args()
+    ensure_dir(args.output_dir)
+
+    processor = build_sam3_processor()
+
+    dataset_summaries = {}
+    for dataset_name in args.datasets:
+        dataset_out_dir = os.path.join(
+            args.output_dir,
+            f"{dataset_name}_{args.split}{args.max_samples}",
+        )
+        ensure_dir(dataset_out_dir)
+
+        _, ds_summary = evaluate_one_dataset(
+            processor=processor,
+            data_root=args.data_root,
+            dataset_name=dataset_name,
+            split=args.split,
+            max_samples=args.max_samples,
+            output_dir=dataset_out_dir,
+        )
+        dataset_summaries[dataset_name] = ds_summary
+
+    aggregate_summary = aggregate_dataset_summaries(dataset_summaries)
+    aggregate_summary_path = os.path.join(args.output_dir, "all_datasets_summary.json")
+    with open(aggregate_summary_path, "w", encoding="utf-8") as f:
+        json.dump(aggregate_summary, f, indent=2, ensure_ascii=False)
+
+    print("\nAll dataset evaluations done.")
+    print(f"Aggregate summary saved to: {aggregate_summary_path}")
+    print(json.dumps(aggregate_summary, indent=2, ensure_ascii=False))
+
+
+if __name__ == "__main__":
+    main()

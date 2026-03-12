@@ -1,0 +1,1 @@
+现在我需要你仿造/root/autodl-tmp/work/sam3_gt_label_eval的内容，做另一项测试工作，测试的形式和/root/autodl-tmp/work/sam3_gt_label_eval保持一致，唯一不同的是当前测试的模型不是sam3,而是lora微调过后的sam3,该论文的名称是Medical SAM3: A Foundation Model for  Universal Prompt-Driven Medical Image  Segmentation。微调的内容是https://github.com/AIM-Research-Lab/Medical-SAM3这个仓库里的工作，权重地址是：https://huggingface.co/ChongCong/Medical-SAM3。现在请分步骤告诉我接下来我应该怎么做

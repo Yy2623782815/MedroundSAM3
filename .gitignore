@@ -1,4 +1,5 @@
 # filename: .gitignore
+
 # 先忽略所有内容
 *
 
@@ -19,3 +20,7 @@
 !repos/**
 !temp_work/**
 !work/**
+
+# 忽略 work 下任意子目录中名为 outputs 的文件夹及其内容
+work/**/outputs/
+work/**/outputs/**
