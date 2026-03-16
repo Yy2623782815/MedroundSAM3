@@ -1,0 +1,67 @@
+{
+  "datasets": [
+    "CHAOS"
+  ],
+  "seed": 42,
+  "val_ratio": 0.1,
+  "per_dataset_stats": {
+    "CHAOS": {
+      "training": {
+        "num_items": 435,
+        "num_questions_total": 1090,
+        "num_samples_kept": 1034,
+        "num_skip_invalid_label": 56,
+        "num_skip_background": 0,
+        "num_skip_empty": 0,
+        "num_skip_load_fail": 0,
+        "num_skip_duplicate": 0
+      },
+      "test": {
+        "num_items": 51,
+        "num_questions_total": 124,
+        "num_samples_kept": 120,
+        "num_skip_invalid_label": 4,
+        "num_skip_background": 0,
+        "num_skip_empty": 0,
+        "num_skip_load_fail": 0,
+        "num_skip_duplicate": 0
+      }
+    }
+  },
+  "train_summary": {
+    "num_samples": 931,
+    "by_dataset": {
+      "CHAOS": 931
+    },
+    "by_label": {
+      "kidney_left": 218,
+      "kidney_right": 196,
+      "liver": 318,
+      "spleen": 199
+    }
+  },
+  "val_summary": {
+    "num_samples": 103,
+    "by_dataset": {
+      "CHAOS": 103
+    },
+    "by_label": {
+      "kidney_left": 16,
+      "kidney_right": 24,
+      "liver": 44,
+      "spleen": 19
+    }
+  },
+  "test_summary": {
+    "num_samples": 120,
+    "by_dataset": {
+      "CHAOS": 120
+    },
+    "by_label": {
+      "kidney_left": 26,
+      "kidney_right": 27,
+      "liver": 43,
+      "spleen": 24
+    }
+  }
+}

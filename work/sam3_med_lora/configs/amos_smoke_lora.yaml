@@ -1,0 +1,46 @@
+# filename: /root/autodl-tmp/work/sam3_med_lora/configs/amos_smoke_lora.yaml
+seed: 42
+
+data:
+  train_index_jsonl: /root/autodl-tmp/work/sam3_med_lora/data_index/amos_only/train_samples.jsonl
+  val_index_jsonl: /root/autodl-tmp/work/sam3_med_lora/data_index/amos_only/val_samples.jsonl
+  image_size: 1008
+  normalize: true
+
+  batch_size: 8
+  val_batch_size: 8
+
+  num_workers: 8
+  pin_memory: true
+  persistent_workers: true
+  prefetch_factor: 4
+  drop_last: false
+
+model:
+  checkpoint_path: /root/autodl-tmp/models/sam3_base/sam3.pt
+  bpe_path: /root/autodl-tmp/repos/sam3/sam3/assets/bpe_simple_vocab_16e6.txt.gz
+  device: cuda
+  load_from_hf: false
+
+lora:
+  r: 8
+  alpha: 16
+  dropout: 0.05
+  train_bias: false
+  train_norm: false
+
+train:
+  epochs: 2
+  lr: 1.0e-4
+  weight_decay: 1.0e-2
+  betas: [0.9, 0.999]
+  use_amp: true
+  amp_dtype: bf16
+  grad_clip: 1.0
+  bce_weight: 0.5
+  dice_weight: 0.5
+  log_interval: 20
+  val_every_n_epochs: 1
+
+output:
+  output_dir: /root/autodl-tmp/work/sam3_med_lora/outputs/amos_smoke_lora

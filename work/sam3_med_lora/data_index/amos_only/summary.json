@@ -1,0 +1,96 @@
+{
+  "datasets": [
+    "AMOS2022"
+  ],
+  "seed": 42,
+  "val_ratio": 0.1,
+  "per_dataset_stats": {
+    "AMOS2022": {
+      "training": {
+        "num_items": 3155,
+        "num_questions_total": 18419,
+        "num_samples_kept": 18360,
+        "num_skip_invalid_label": 59,
+        "num_skip_background": 0,
+        "num_skip_empty": 0,
+        "num_skip_load_fail": 0,
+        "num_skip_duplicate": 0
+      },
+      "test": {
+        "num_items": 422,
+        "num_questions_total": 2357,
+        "num_samples_kept": 2352,
+        "num_skip_invalid_label": 5,
+        "num_skip_background": 0,
+        "num_skip_empty": 0,
+        "num_skip_load_fail": 0,
+        "num_skip_duplicate": 0
+      }
+    }
+  },
+  "train_summary": {
+    "num_samples": 16524,
+    "by_dataset": {
+      "AMOS2022": 16524
+    },
+    "by_label": {
+      "adrenal_gland_left": 516,
+      "adrenal_gland_right": 495,
+      "aorta": 2057,
+      "bladder": 61,
+      "duodenum": 1187,
+      "esophagus": 771,
+      "gallbladder": 700,
+      "inferior_vena_cava": 1581,
+      "kidney_left": 1170,
+      "kidney_right": 1213,
+      "liver": 2478,
+      "pancreas": 1247,
+      "spleen": 1479,
+      "stomach": 1569
+    }
+  },
+  "val_summary": {
+    "num_samples": 1836,
+    "by_dataset": {
+      "AMOS2022": 1836
+    },
+    "by_label": {
+      "adrenal_gland_left": 59,
+      "adrenal_gland_right": 48,
+      "aorta": 214,
+      "bladder": 9,
+      "duodenum": 127,
+      "esophagus": 74,
+      "gallbladder": 77,
+      "inferior_vena_cava": 193,
+      "kidney_left": 136,
+      "kidney_right": 133,
+      "liver": 271,
+      "pancreas": 138,
+      "spleen": 176,
+      "stomach": 181
+    }
+  },
+  "test_summary": {
+    "num_samples": 2352,
+    "by_dataset": {
+      "AMOS2022": 2352
+    },
+    "by_label": {
+      "adrenal_gland_left": 88,
+      "adrenal_gland_right": 72,
+      "aorta": 282,
+      "duodenum": 149,
+      "esophagus": 94,
+      "gallbladder": 92,
+      "inferior_vena_cava": 214,
+      "kidney_left": 159,
+      "kidney_right": 168,
+      "liver": 383,
+      "pancreas": 168,
+      "spleen": 224,
+      "stomach": 259
+    }
+  }
+}
