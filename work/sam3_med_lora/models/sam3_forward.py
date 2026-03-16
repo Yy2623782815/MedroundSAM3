@@ -15,7 +15,10 @@ from sam3.model.data_misc import (
 _DEBUG_PRINT_ONCE = True
 
 
-def _build_text_batch_and_text_ids(prompt_texts: List[str]) -> Tuple[List[str], torch.Tensor]:
+def _build_text_batch_and_text_ids(
+    prompt_texts: List[str],
+    device: torch.device,
+) -> Tuple[List[str], torch.Tensor]:
     """
     官方 collator 的逻辑是：
     - find_text_batch: 去重后的文本列表
@@ -27,7 +30,7 @@ def _build_text_batch_and_text_ids(prompt_texts: List[str]) -> Tuple[List[str], 
         if txt not in text_batch:
             text_batch.append(txt)
         text_ids.append(text_batch.index(txt))
-    return text_batch, torch.as_tensor(text_ids, dtype=torch.long)
+    return text_batch, torch.as_tensor(text_ids, dtype=torch.long, device=device)
 
 
 def build_minimal_batched_datapoint(
@@ -62,7 +65,7 @@ def build_minimal_batched_datapoint(
     device = images.device
     b, _, h, w = images.shape
 
-    find_text_batch, text_ids = _build_text_batch_and_text_ids(prompt_texts)
+    find_text_batch, text_ids = _build_text_batch_and_text_ids(prompt_texts, device=device)
 
     img_ids = torch.arange(b, device=device, dtype=torch.long)
 
@@ -261,6 +264,24 @@ def _resize_logits_to_target_hw(pred_logits: torch.Tensor, target_hw: Tuple[int,
     return F.interpolate(pred_logits, size=(h, w), mode="bilinear", align_corners=False)
 
 
+def _ensure_logit_space(pred: torch.Tensor) -> torch.Tensor:
+    """
+    统一损失输入到 logit 空间。
+    - 若模型输出已是 logits（包含负值或大于 1），直接返回。
+    - 若输出看起来是概率图 [0,1]，转换为 logits，避免 BCEWithLogits 使用错误输入。
+    """
+    if not torch.is_floating_point(pred):
+        pred = pred.float()
+
+    min_v = float(pred.detach().amin().item())
+    max_v = float(pred.detach().amax().item())
+    if min_v >= 0.0 and max_v <= 1.0:
+        eps = 1e-6
+        pred = pred.clamp(min=eps, max=1.0 - eps)
+        pred = torch.log(pred / (1.0 - pred))
+    return pred
+
+
 # filename: /root/autodl-tmp/work/sam3_med_lora/models/sam3_forward.py
 
 def sam3_train_forward(
@@ -288,12 +309,9 @@ def sam3_train_forward(
         target_masks=masks,
     )
 
-    was_training = model.training
-    model.eval()
     outputs = model(batched_input)
-    if was_training:
-        model.train()
 
     pred_logits = _extract_logits_from_output(outputs)
     pred_logits = _resize_logits_to_target_hw(pred_logits, target_hw=masks.shape[-2:])
+    pred_logits = _ensure_logit_space(pred_logits)
     return pred_logits

@@ -335,13 +335,60 @@ def main():
             }
     
         elapsed = time.time() - t0
-    
-        print("[done] training finished.")
-        print(f"[done] output_dir = {output_dir}")
+
+        row = {
+            "epoch": epoch,
+            "time_sec": round(elapsed, 3),
+            "train": train_metrics,
+            "val": val_metrics,
+        }
+        history.append(row)
+
         print(
-            "[note] 当前脚本的 forward 仍是占位版 _debug_fake_forward()，"
-            "下一步需要替换成真实 SAM3 文本分割训练 forward。"
+            f"[epoch {epoch:03d}] "
+            f"train_loss={train_metrics['loss']:.4f} "
+            f"train_dice={train_metrics['dice']:.4f} "
+            f"val_loss={val_metrics['loss']:.4f} "
+            f"val_dice={val_metrics['dice']:.4f} "
+            f"time={elapsed:.1f}s"
         )
+
+        latest_ckpt = os.path.join(output_dir, "checkpoints", "latest.pt")
+        save_checkpoint(
+            path=latest_ckpt,
+            epoch=epoch,
+            model=model,
+            optimizer=optimizer,
+            best_val_dice=best_val_dice,
+            config=cfg,
+            extra_info={"train_metrics": train_metrics, "val_metrics": val_metrics},
+        )
+
+        if epoch % val_every_n_epochs == 0 and val_metrics["dice"] > best_val_dice:
+            best_val_dice = val_metrics["dice"]
+            best_ckpt = os.path.join(output_dir, "checkpoints", "best.pt")
+            save_checkpoint(
+                path=best_ckpt,
+                epoch=epoch,
+                model=model,
+                optimizer=optimizer,
+                best_val_dice=best_val_dice,
+                config=cfg,
+                extra_info={"train_metrics": train_metrics, "val_metrics": val_metrics},
+            )
+            print(f"[best] epoch={epoch} val_dice={best_val_dice:.4f}")
+
+    save_json(
+        {
+            "best_val_dice": best_val_dice,
+            "epochs": epochs,
+            "history": history,
+        },
+        os.path.join(output_dir, "logs", "history.json"),
+    )
+
+    print("[done] training finished.")
+    print(f"[done] output_dir = {output_dir}")
 
 
 if __name__ == "__main__":
