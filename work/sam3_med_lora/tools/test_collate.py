@@ -12,7 +12,7 @@ from med_labelname_dataset import MedLabelNameDataset
 
 def main():
     dataset = MedLabelNameDataset(
-        index_jsonl="/root/autodl-tmp/work/sam3_med_lora/data_index/amos_only/train_samples.jsonl",
+        index_jsonl="/root/autodl-tmp/work/sam3_med_lora/data_index/chaos_only/train_samples.jsonl",
         image_size=512,
         normalize=True,
     )

@@ -15,7 +15,10 @@ from sam3.model.data_misc import (
 _DEBUG_PRINT_ONCE = True
 
 
-def _build_text_batch_and_text_ids(prompt_texts: List[str]) -> Tuple[List[str], torch.Tensor]:
+def _build_text_batch_and_text_ids(
+    prompt_texts: List[str],
+    device: torch.device,
+) -> Tuple[List[str], torch.Tensor]:
     """
     官方 collator 的逻辑是：
     - find_text_batch: 去重后的文本列表
@@ -27,7 +30,7 @@ def _build_text_batch_and_text_ids(prompt_texts: List[str]) -> Tuple[List[str], 
         if txt not in text_batch:
             text_batch.append(txt)
         text_ids.append(text_batch.index(txt))
-    return text_batch, torch.as_tensor(text_ids, dtype=torch.long)
+    return text_batch, torch.as_tensor(text_ids, dtype=torch.long, device=device)
 
 
 def build_minimal_batched_datapoint(
@@ -62,7 +65,7 @@ def build_minimal_batched_datapoint(
     device = images.device
     b, _, h, w = images.shape
 
-    find_text_batch, text_ids = _build_text_batch_and_text_ids(prompt_texts)
+    find_text_batch, text_ids = _build_text_batch_and_text_ids(prompt_texts, device=device)
 
     img_ids = torch.arange(b, device=device, dtype=torch.long)
 
@@ -229,14 +232,14 @@ def _extract_logits_from_output(outputs: Any) -> torch.Tensor:
         if "pred_masks" in out and torch.is_tensor(out["pred_masks"]):
             x = out["pred_masks"]
             if x.ndim == 4:   # [B,Q,H,W] or [B,1,H,W]
-                return x[:, :1]
+                return x
             if x.ndim == 3:   # [B,H,W]
                 return x.unsqueeze(1)
 
         if "semantic_seg" in out and torch.is_tensor(out["semantic_seg"]):
             x = out["semantic_seg"]
             if x.ndim == 4:
-                return x[:, :1]
+                return x
             if x.ndim == 3:
                 return x.unsqueeze(1)
 
@@ -259,6 +262,34 @@ def _resize_logits_to_target_hw(pred_logits: torch.Tensor, target_hw: Tuple[int,
     if pred_logits.shape[-2:] == (h, w):
         return pred_logits
     return F.interpolate(pred_logits, size=(h, w), mode="bilinear", align_corners=False)
+
+
+def _select_query_aligned_logits(pred_logits: torch.Tensor, batch_size: int) -> torch.Tensor:
+    """
+    将 [B,Q,H,W] 的多 query 输出对齐成每图一个监督 mask。
+
+    当前我们构造 query 的方式是“每张图一个 query，顺序与 batch 一致”，
+    因此当 Q==B 时，应取对角线 pred[i, i] 作为第 i 张图的监督结果。
+    """
+    if pred_logits.ndim != 4:
+        raise ValueError(f"pred_logits must be [B,Q,H,W], got {tuple(pred_logits.shape)}")
+
+    b, q, _, _ = pred_logits.shape
+    if b != batch_size:
+        raise ValueError(f"Batch mismatch: pred B={b}, batch_size={batch_size}")
+
+    if q == 1:
+        return pred_logits
+
+    if q == b:
+        idx = torch.arange(b, device=pred_logits.device)
+        return pred_logits[idx, idx].unsqueeze(1)
+
+    # 如果 query 数与 batch 不一致，直接报错，避免监督 silently 错位。
+    raise ValueError(
+        f"Unsupported pred query dim: pred shape={tuple(pred_logits.shape)}, "
+        "expect Q==1 or Q==B for current supervision alignment."
+    )
 
 
 # filename: /root/autodl-tmp/work/sam3_med_lora/models/sam3_forward.py
@@ -288,12 +319,9 @@ def sam3_train_forward(
         target_masks=masks,
     )
 
-    was_training = model.training
-    model.eval()
     outputs = model(batched_input)
-    if was_training:
-        model.train()
 
     pred_logits = _extract_logits_from_output(outputs)
+    pred_logits = _select_query_aligned_logits(pred_logits, batch_size=masks.shape[0])
     pred_logits = _resize_logits_to_target_hw(pred_logits, target_hw=masks.shape[-2:])
     return pred_logits
