@@ -20,6 +20,22 @@
 
 > 说明：MedSAM3 源码在导入时会引用 `huggingface_hub`。本工程在 `load_from_hf=false` 时注入本地 stub，确保仅使用本地权重路径，不触发 HF 下载。
 
+## 多 query mask 选择（可配置）
+训练时 SAM3 会输出 `pred_masks=[B,Q,H,W]`，而二值监督 loss 需要单掩码 `[B,1,H,W]`。
+可通过 `train.query_select` 配置策略：
+
+```yaml
+train:
+  query_select:
+    mode: logits_max   # logits_max | mask_mean
+    topk: 1            # >=1
+    reduce: mean       # mean | max
+```
+
+- `mode=logits_max`：用 `sigmoid(pred_logits).max(-1)` 作为 query score（更接近 MedSAM3 postprocess 逻辑）
+- `mode=mask_mean`：用 `pred_mask` 的空间均值打分
+- `topk>1`：先选 top-k query，再按 `reduce` 聚合成 1 张监督掩码
+
 ## 构建索引（CHAOS）
 ```bash
 export PYTHONPATH=/root/autodl-tmp/work/medsam3_my_lora:$PYTHONPATH

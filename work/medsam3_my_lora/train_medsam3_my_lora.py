@@ -59,7 +59,23 @@ def run_one_epoch(model, loader, optimizer, cfg, device: str, is_train: bool) ->
     for batch in tqdm(loader, desc="train" if is_train else "val", leave=False):
         batch = move_batch_to_device(batch, device)
         with torch.set_grad_enabled(is_train):
-            pred_logits = sam3_train_forward(model, batch, cfg["model"]["sam3_repo_root"])
+            query_select_cfg = cfg.get("model", {}).get("query_select", None)
+            if query_select_cfg is None:
+                query_select_cfg = train_cfg.get("query_select", None)
+            # 向后兼容：若用户还在用旧字段 query_select_mode，则自动映射到新配置
+            if query_select_cfg is None and "query_select_mode" in train_cfg:
+                query_select_cfg = {
+                    "mode": "logits_max" if str(train_cfg["query_select_mode"]) == "best_logit" else "mask_mean",
+                    "topk": 1,
+                    "reduce": "mean",
+                }
+
+            pred_logits = sam3_train_forward(
+                model,
+                batch,
+                cfg["model"]["sam3_repo_root"],
+                query_select_cfg=query_select_cfg,
+            )
             loss, _ = combined_bce_dice_loss(pred_logits, batch["masks"], train_cfg.get("bce_weight", 0.5), train_cfg.get("dice_weight", 0.5))
             if is_train:
                 optimizer.zero_grad(set_to_none=True)
