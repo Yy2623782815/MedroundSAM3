@@ -8,7 +8,7 @@
 - `utils/med_data_utils.py`: 从旧工程迁移的稳定 GT `.npz` 解析逻辑
 - `tools/build_labelname_samples.py`: 从你的数据 JSON 构建 train/val/test JSONL 索引
 - `train_medsam3_my_lora.py`: 训练入口
-- `configs/my_smoke_lora.yaml`: 本地模型路径 + 数据路径 + 超参配置
+- `configs/my_smoke_lora.yaml`: 本地模型路径 + 数据路径 + 超参配置（默认 CHAOS）
 - `scripts/run_smoke_train.sh`: 一键冒烟脚本
 
 ## 本地模型加载（默认）
@@ -18,16 +18,18 @@
 - `model.bpe_path`: 本地 BPE 词表路径
 - `model.load_from_hf: false`
 
-## 构建索引
+> 说明：MedSAM3 源码在导入时会引用 `huggingface_hub`。本工程在 `load_from_hf=false` 时注入本地 stub，确保仅使用本地权重路径，不触发 HF 下载。
+
+## 构建索引（CHAOS）
 ```bash
 export PYTHONPATH=/root/autodl-tmp/work/medsam3_my_lora:$PYTHONPATH
 python /root/autodl-tmp/work/medsam3_my_lora/tools/build_labelname_samples.py \
   --data_root /root/autodl-tmp/data/SAM3_data \
-  --datasets AMOS2022 \
-  --output_dir /root/autodl-tmp/work/medsam3_my_lora/data_index/amos_only
+  --datasets CHAOS \
+  --output_dir /root/autodl-tmp/work/medsam3_my_lora/data_index/chaos_only
 ```
 
-## 训练
+## 训练（默认 CHAOS）
 ```bash
 bash /root/autodl-tmp/work/medsam3_my_lora/scripts/run_smoke_train.sh
 ```

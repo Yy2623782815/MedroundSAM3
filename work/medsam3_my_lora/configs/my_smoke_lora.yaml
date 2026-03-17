@@ -1,8 +1,8 @@
 seed: 42
 
 data:
-  train_index_jsonl: /root/autodl-tmp/work/medsam3_my_lora/data_index/amos_only/train_samples.jsonl
-  val_index_jsonl: /root/autodl-tmp/work/medsam3_my_lora/data_index/amos_only/val_samples.jsonl
+  train_index_jsonl: /root/autodl-tmp/work/medsam3_my_lora/data_index/chaos_only/train_samples.jsonl
+  val_index_jsonl: /root/autodl-tmp/work/medsam3_my_lora/data_index/chaos_only/val_samples.jsonl
   image_size: 1008
   normalize: true
   batch_size: 4
@@ -33,4 +33,4 @@ train:
   dice_weight: 0.5
 
 output:
-  output_dir: /root/autodl-tmp/work/medsam3_my_lora/outputs/amos_smoke
+  output_dir: /root/autodl-tmp/work/medsam3_my_lora/outputs/chaos_smoke
