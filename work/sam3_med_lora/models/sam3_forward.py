@@ -232,14 +232,14 @@ def _extract_logits_from_output(outputs: Any) -> torch.Tensor:
         if "pred_masks" in out and torch.is_tensor(out["pred_masks"]):
             x = out["pred_masks"]
             if x.ndim == 4:   # [B,Q,H,W] or [B,1,H,W]
-                return x[:, :1]
+                return x
             if x.ndim == 3:   # [B,H,W]
                 return x.unsqueeze(1)
 
         if "semantic_seg" in out and torch.is_tensor(out["semantic_seg"]):
             x = out["semantic_seg"]
             if x.ndim == 4:
-                return x[:, :1]
+                return x
             if x.ndim == 3:
                 return x.unsqueeze(1)
 
@@ -264,22 +264,32 @@ def _resize_logits_to_target_hw(pred_logits: torch.Tensor, target_hw: Tuple[int,
     return F.interpolate(pred_logits, size=(h, w), mode="bilinear", align_corners=False)
 
 
-def _ensure_logit_space(pred: torch.Tensor) -> torch.Tensor:
+def _select_query_aligned_logits(pred_logits: torch.Tensor, batch_size: int) -> torch.Tensor:
     """
-    统一损失输入到 logit 空间。
-    - 若模型输出已是 logits（包含负值或大于 1），直接返回。
-    - 若输出看起来是概率图 [0,1]，转换为 logits，避免 BCEWithLogits 使用错误输入。
-    """
-    if not torch.is_floating_point(pred):
-        pred = pred.float()
+    将 [B,Q,H,W] 的多 query 输出对齐成每图一个监督 mask。
 
-    min_v = float(pred.detach().amin().item())
-    max_v = float(pred.detach().amax().item())
-    if min_v >= 0.0 and max_v <= 1.0:
-        eps = 1e-6
-        pred = pred.clamp(min=eps, max=1.0 - eps)
-        pred = torch.log(pred / (1.0 - pred))
-    return pred
+    当前我们构造 query 的方式是“每张图一个 query，顺序与 batch 一致”，
+    因此当 Q==B 时，应取对角线 pred[i, i] 作为第 i 张图的监督结果。
+    """
+    if pred_logits.ndim != 4:
+        raise ValueError(f"pred_logits must be [B,Q,H,W], got {tuple(pred_logits.shape)}")
+
+    b, q, _, _ = pred_logits.shape
+    if b != batch_size:
+        raise ValueError(f"Batch mismatch: pred B={b}, batch_size={batch_size}")
+
+    if q == 1:
+        return pred_logits
+
+    if q == b:
+        idx = torch.arange(b, device=pred_logits.device)
+        return pred_logits[idx, idx].unsqueeze(1)
+
+    # 如果 query 数与 batch 不一致，直接报错，避免监督 silently 错位。
+    raise ValueError(
+        f"Unsupported pred query dim: pred shape={tuple(pred_logits.shape)}, "
+        "expect Q==1 or Q==B for current supervision alignment."
+    )
 
 
 # filename: /root/autodl-tmp/work/sam3_med_lora/models/sam3_forward.py
@@ -312,6 +322,6 @@ def sam3_train_forward(
     outputs = model(batched_input)
 
     pred_logits = _extract_logits_from_output(outputs)
+    pred_logits = _select_query_aligned_logits(pred_logits, batch_size=masks.shape[0])
     pred_logits = _resize_logits_to_target_hw(pred_logits, target_hw=masks.shape[-2:])
-    pred_logits = _ensure_logit_space(pred_logits)
     return pred_logits
