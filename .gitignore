@@ -1,5 +1,3 @@
-# filename: .gitignore
-
 # 先忽略所有内容
 *
 
@@ -25,5 +23,6 @@
 work/**/outputs/
 work/**/outputs/**
 
-# 允许lora微调的权重文件被跟踪
-!work/medsam3_my_lora/outputs
+# 重新允许 medsam3_my_lora 的 outputs 及其内容
+!work/medsam3_my_lora/outputs/
+!work/medsam3_my_lora/outputs/**
