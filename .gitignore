@@ -24,3 +24,6 @@
 # 忽略 work 下任意子目录中名为 outputs 的文件夹及其内容
 work/**/outputs/
 work/**/outputs/**
+
+# 允许lora微调的权重文件被跟踪
+!work/medsam3_my_lora/outputs

@@ -1,0 +1,1 @@
+work/medsam3_my_lora目录下的代码是我lora微调sam3的代码，产生的lora权重的在我本地电脑上的地址是/root/autodl-tmp/work/medsam3_my_lora/outputs/chaos_smoke/checkpoints/best.pt，现在

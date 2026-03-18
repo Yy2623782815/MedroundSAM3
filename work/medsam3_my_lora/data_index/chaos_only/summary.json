@@ -1,0 +1,26 @@
+{
+  "datasets": [
+    "CHAOS"
+  ],
+  "stats": {
+    "CHAOS": {
+      "training": {
+        "num_items": 435,
+        "kept": 1034,
+        "skip_empty": 0,
+        "skip_fail": 0,
+        "skip_invalid": 56
+      },
+      "test": {
+        "num_items": 51,
+        "kept": 120,
+        "skip_empty": 0,
+        "skip_fail": 0,
+        "skip_invalid": 4
+      }
+    }
+  },
+  "train": 931,
+  "val": 103,
+  "test": 120
+}
