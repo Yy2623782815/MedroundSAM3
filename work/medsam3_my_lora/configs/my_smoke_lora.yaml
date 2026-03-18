@@ -5,8 +5,8 @@ data:
   val_index_jsonl: /root/autodl-tmp/work/medsam3_my_lora/data_index/chaos_only/val_samples.jsonl
   image_size: 1008
   normalize: true
-  batch_size: 16
-  val_batch_size: 16
+  batch_size: 4
+  val_batch_size: 4
   num_workers: 4
   pin_memory: true
 
