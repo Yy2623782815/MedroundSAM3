@@ -5,6 +5,15 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 PROJECT_ROOT="$(cd "${SCRIPT_DIR}/../.." && pwd)"
 EVAL_ROOT="${SCRIPT_DIR}"
 
+resolve_path() {
+  local p="$1"
+  if [[ "$p" = /* ]]; then
+    echo "$p"
+  else
+    echo "${PROJECT_ROOT}/$p"
+  fi
+}
+
 # 数据根目录
 DATA_ROOT="${DATA_ROOT:-${PROJECT_ROOT}/data/SAM3_data}"
 # 输出根目录
@@ -30,6 +39,12 @@ RESOLUTION="${RESOLUTION:-1008}"
 DETECTION_THRESHOLD="${DETECTION_THRESHOLD:-0.5}"
 # NMS 的 IoU 阈值
 NMS_IOU_THRESHOLD="${NMS_IOU_THRESHOLD:-0.5}"
+
+DATA_ROOT="$(resolve_path "${DATA_ROOT}")"
+OUTPUT_ROOT="$(resolve_path "${OUTPUT_ROOT}")"
+CONFIG_PATH="$(resolve_path "${CONFIG_PATH}")"
+LORA_WEIGHTS="$(resolve_path "${LORA_WEIGHTS}")"
+CHECKPOINT_PATH="$(resolve_path "${CHECKPOINT_PATH}")"
 
 DATASETS=(
   AMOS2022

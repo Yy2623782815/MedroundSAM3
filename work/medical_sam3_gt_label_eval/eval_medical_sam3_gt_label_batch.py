@@ -27,8 +27,26 @@ from medical_sam3_infer import (
 from metrics import dice_score, iou_score
 from viz import visualize
 
-PROJECT_ROOT = Path(__file__).resolve().parents[2]
+def find_project_root(start: Path) -> Path:
+    start = start.resolve()
+    for candidate in [start, *start.parents]:
+        if (candidate / ".git").exists() and (candidate / "work").exists():
+            return candidate
+    for candidate in [start, *start.parents]:
+        if (candidate / "work").exists() and (candidate / "repos").exists():
+            return candidate
+    return start.parents[2]
+
+
+PROJECT_ROOT = find_project_root(Path(__file__))
 DEFAULT_SAM3_REPO_ROOT = PROJECT_ROOT / "repos" / "sam3"
+
+
+def resolve_cli_path(path_str: str) -> str:
+    path = Path(path_str).expanduser()
+    if path.is_absolute():
+        return str(path.resolve())
+    return str((PROJECT_ROOT / path).resolve())
 
 
 def _metric_stats(items, metric_key):
@@ -567,6 +585,10 @@ def parse_args():
 
 def main():
     args = parse_args()
+    args.data_root = resolve_cli_path(args.data_root)
+    args.output_dir = resolve_cli_path(args.output_dir)
+    args.sam3_repo_root = resolve_cli_path(args.sam3_repo_root)
+    args.checkpoint = resolve_cli_path(args.checkpoint)
     ensure_dir(args.output_dir)
 
     processor = build_medical_sam3_processor(

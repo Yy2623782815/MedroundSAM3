@@ -5,6 +5,15 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 PROJECT_ROOT="$(cd "${SCRIPT_DIR}/../../.." && pwd)"
 EVAL_ROOT="$(cd "${SCRIPT_DIR}/.." && pwd)"
 
+resolve_path() {
+  local p="$1"
+  if [[ "$p" = /* ]]; then
+    echo "$p"
+  else
+    echo "${PROJECT_ROOT}/$p"
+  fi
+}
+
 DATA_ROOT="${DATA_ROOT:-${PROJECT_ROOT}/data/SAM3_data}"
 OUTPUT_ROOT="${OUTPUT_ROOT:-${EVAL_ROOT}/outputs}"
 
@@ -21,6 +30,14 @@ DEVICE="${DEVICE:-cuda}"
 RESOLUTION="${RESOLUTION:-1008}"
 DETECTION_THRESHOLD="${DETECTION_THRESHOLD:-0.5}"
 NMS_IOU_THRESHOLD="${NMS_IOU_THRESHOLD:-0.5}"
+
+DATA_ROOT="$(resolve_path "${DATA_ROOT}")"
+OUTPUT_ROOT="$(resolve_path "${OUTPUT_ROOT}")"
+SAM3_REPO_ROOT="$(resolve_path "${SAM3_REPO_ROOT}")"
+MY_LORA_PROJECT_ROOT="$(resolve_path "${MY_LORA_PROJECT_ROOT}")"
+LORA_CHECKPOINT_PATH="$(resolve_path "${LORA_CHECKPOINT_PATH}")"
+CHECKPOINT_PATH="$(resolve_path "${CHECKPOINT_PATH}")"
+BPE_PATH="$(resolve_path "${BPE_PATH}")"
 
 # 指定评测数据集（空表示交给 Python 默认列表）
 # 例如：DATASETS="CHAOS BraTS"

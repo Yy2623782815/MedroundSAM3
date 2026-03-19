@@ -5,6 +5,15 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 PROJECT_ROOT="$(cd "${SCRIPT_DIR}/../.." && pwd)"
 EVAL_ROOT="${SCRIPT_DIR}"
 
+resolve_path() {
+  local p="$1"
+  if [[ "$p" = /* ]]; then
+    echo "$p"
+  else
+    echo "${PROJECT_ROOT}/$p"
+  fi
+}
+
 export OMP_NUM_THREADS=4
 export MKL_NUM_THREADS=4
 export OPENBLAS_NUM_THREADS=4
@@ -20,6 +29,11 @@ DEVICE=${DEVICE:-cuda}
 CONF_THRES=${CONF_THRES:-0.5}
 OUTPUT_ROOT=${OUTPUT_ROOT:-${EVAL_ROOT}/outputs/multi_datasets_${SPLIT}_${MAX_SAMPLES}}
 DATA_ROOT=${DATA_ROOT:-${PROJECT_ROOT}/data/SAM3_data}
+
+CHECKPOINT="$(resolve_path "${CHECKPOINT}")"
+SAM3_REPO_ROOT="$(resolve_path "${SAM3_REPO_ROOT}")"
+OUTPUT_ROOT="$(resolve_path "${OUTPUT_ROOT}")"
+DATA_ROOT="$(resolve_path "${DATA_ROOT}")"
 
 python3 "${EVAL_ROOT}/eval_medical_sam3_gt_label_batch.py" \
   --data_root "${DATA_ROOT}" \

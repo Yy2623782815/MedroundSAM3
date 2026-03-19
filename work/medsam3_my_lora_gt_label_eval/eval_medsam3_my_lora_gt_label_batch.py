@@ -23,6 +23,27 @@ from medsam3_my_lora_infer import MedSAM3MyLoRAInferencer
 from metrics import dice_score, iou_score
 from viz import visualize
 
+
+def find_project_root(start: Path) -> Path:
+    start = start.resolve()
+    for candidate in [start, *start.parents]:
+        if (candidate / ".git").exists() and (candidate / "work").exists():
+            return candidate
+    for candidate in [start, *start.parents]:
+        if (candidate / "work").exists() and (candidate / "repos").exists():
+            return candidate
+    return start.parents[2]
+
+
+PROJECT_ROOT = find_project_root(Path(__file__))
+
+
+def resolve_cli_path(path_str: str) -> str:
+    path = Path(path_str).expanduser()
+    if path.is_absolute():
+        return str(path.resolve())
+    return str((PROJECT_ROOT / path).resolve())
+
 DEFAULT_DATASETS = [
     "AMOS2022",
     "BraTS",
@@ -642,6 +663,13 @@ def parse_args():
 
 def main():
     args = parse_args()
+    args.data_root = resolve_cli_path(args.data_root)
+    args.output_dir = resolve_cli_path(args.output_dir)
+    args.sam3_repo_root = resolve_cli_path(args.sam3_repo_root)
+    args.my_lora_project_root = resolve_cli_path(args.my_lora_project_root)
+    args.lora_checkpoint_path = resolve_cli_path(args.lora_checkpoint_path)
+    args.checkpoint_path = resolve_cli_path(args.checkpoint_path)
+    args.bpe_path = resolve_cli_path(args.bpe_path)
     ensure_dir(args.output_dir)
     target_datasets = resolve_target_datasets(args)
 

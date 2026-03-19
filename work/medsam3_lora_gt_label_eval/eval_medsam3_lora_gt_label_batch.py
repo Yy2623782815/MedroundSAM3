@@ -25,6 +25,27 @@ from metrics import dice_score, iou_score
 from viz import visualize
 
 
+def find_project_root(start: Path) -> Path:
+    start = start.resolve()
+    for candidate in [start, *start.parents]:
+        if (candidate / ".git").exists() and (candidate / "work").exists():
+            return candidate
+    for candidate in [start, *start.parents]:
+        if (candidate / "work").exists() and (candidate / "repos").exists():
+            return candidate
+    return start.parents[2]
+
+
+PROJECT_ROOT = find_project_root(Path(__file__))
+
+
+def resolve_cli_path(path_str: str) -> str:
+    path = Path(path_str).expanduser()
+    if path.is_absolute():
+        return str(path.resolve())
+    return str((PROJECT_ROOT / path).resolve())
+
+
 def build_medsam3_lora_model(
     config_path: str,
     lora_weights: str,
@@ -666,6 +687,11 @@ def parse_args():
 
 def main():
     args = parse_args()
+    args.data_root = resolve_cli_path(args.data_root)
+    args.output_dir = resolve_cli_path(args.output_dir)
+    args.config_path = resolve_cli_path(args.config_path)
+    args.lora_weights = resolve_cli_path(args.lora_weights)
+    args.checkpoint_path = resolve_cli_path(args.checkpoint_path)
     ensure_dir(args.output_dir)
 
     inferencer = build_medsam3_lora_model(
