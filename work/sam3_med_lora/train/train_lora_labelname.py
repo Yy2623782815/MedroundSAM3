@@ -4,11 +4,12 @@ import os
 import random
 import sys
 import time
+from pathlib import Path
 from typing import Any, Dict
 
-PROJECT_ROOT = "/root/autodl-tmp/work/sam3_med_lora"
-if PROJECT_ROOT not in sys.path:
-    sys.path.insert(0, PROJECT_ROOT)
+PROJECT_ROOT = Path(__file__).resolve().parents[1]
+if str(PROJECT_ROOT) not in sys.path:
+    sys.path.insert(0, str(PROJECT_ROOT))
 
 import numpy as np
 import torch
@@ -47,6 +48,13 @@ def load_yaml(path: str) -> Dict[str, Any]:
 def save_json(obj: Dict[str, Any], path: str) -> None:
     with open(path, "w", encoding="utf-8") as f:
         json.dump(obj, f, indent=2, ensure_ascii=False)
+
+
+def resolve_path(path_str: str) -> str:
+    path = Path(path_str).expanduser()
+    if path.is_absolute():
+        return str(path)
+    return str((PROJECT_ROOT.parents[1] / path).resolve())
 
 
 # filename: /root/autodl-tmp/work/sam3_med_lora/train/train_lora_labelname.py
@@ -252,6 +260,11 @@ def main():
     args = parser.parse_args()
 
     cfg = load_yaml(args.config)
+    cfg["data"]["train_index_jsonl"] = resolve_path(cfg["data"]["train_index_jsonl"])
+    cfg["data"]["val_index_jsonl"] = resolve_path(cfg["data"]["val_index_jsonl"])
+    cfg["model"]["checkpoint_path"] = resolve_path(cfg["model"]["checkpoint_path"])
+    cfg["model"]["bpe_path"] = resolve_path(cfg["model"]["bpe_path"])
+    cfg["output"]["output_dir"] = resolve_path(cfg["output"]["output_dir"])
 
     os.environ.pop("OMP_NUM_THREADS", None)
     os.environ.setdefault("OMP_NUM_THREADS", "4")

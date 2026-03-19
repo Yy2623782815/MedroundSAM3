@@ -2,6 +2,7 @@
 import argparse
 import json
 import os
+from pathlib import Path
 import traceback
 from collections import defaultdict
 
@@ -24,6 +25,27 @@ from metrics import dice_score, iou_score
 from viz import visualize
 
 
+def find_project_root(start: Path) -> Path:
+    start = start.resolve()
+    for candidate in [start, *start.parents]:
+        if (candidate / ".git").exists() and (candidate / "work").exists():
+            return candidate
+    for candidate in [start, *start.parents]:
+        if (candidate / "work").exists() and (candidate / "repos").exists():
+            return candidate
+    return start.parents[2]
+
+
+PROJECT_ROOT = find_project_root(Path(__file__))
+
+
+def resolve_cli_path(path_str: str) -> str:
+    path = Path(path_str).expanduser()
+    if path.is_absolute():
+        return str(path.resolve())
+    return str((PROJECT_ROOT / path).resolve())
+
+
 def build_medsam3_lora_model(
     config_path: str,
     lora_weights: str,
@@ -32,7 +54,7 @@ def build_medsam3_lora_model(
     nms_iou_threshold: float,
     device: str,
     load_from_HF: bool = False,
-    checkpoint_path: str = "/root/autodl-tmp/models/sam3_base/sam3.pt",
+    checkpoint_path: str = str(Path(__file__).resolve().parents[2] / "models" / "sam3_base" / "sam3.pt"),
 ):
     inferencer = MedSAM3LoRAInferencer(
         config_path=config_path,
@@ -622,17 +644,17 @@ def parse_args():
     parser.add_argument(
         "--config_path",
         type=str,
-        default="/root/autodl-tmp/repos/MedSAM3/configs/full_lora_config.yaml",
+        default=str(PROJECT_ROOT / "repos" / "MedSAM3" / "configs" / "full_lora_config.yaml"),
     )
     parser.add_argument(
         "--lora_weights",
         type=str,
-        default="/root/autodl-tmp/models/medsam3_lora/best_lora_weights.pt",
+        default=str(PROJECT_ROOT / "models" / "medsam3_lora" / "best_lora_weights.pt"),
     )
     parser.add_argument(
         "--checkpoint_path",
         type=str,
-        default="/root/autodl-tmp/models/sam3_base/sam3.pt",
+        default=str(PROJECT_ROOT / "models" / "sam3_base" / "sam3.pt"),
     )
     parser.add_argument(
         "--device",
@@ -665,6 +687,11 @@ def parse_args():
 
 def main():
     args = parse_args()
+    args.data_root = resolve_cli_path(args.data_root)
+    args.output_dir = resolve_cli_path(args.output_dir)
+    args.config_path = resolve_cli_path(args.config_path)
+    args.lora_weights = resolve_cli_path(args.lora_weights)
+    args.checkpoint_path = resolve_cli_path(args.checkpoint_path)
     ensure_dir(args.output_dir)
 
     inferencer = build_medsam3_lora_model(

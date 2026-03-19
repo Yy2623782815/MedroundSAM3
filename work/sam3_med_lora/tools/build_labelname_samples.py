@@ -1,5 +1,6 @@
 # filename: /root/autodl-tmp/work/sam3_med_lora/tools/build_labelname_samples.py
 import os
+from pathlib import Path
 import sys
 import json
 import argparse
@@ -8,7 +9,7 @@ from typing import Any, Dict, List, Tuple
 
 from tqdm import tqdm
 
-PROJECT_ROOT = "/root/autodl-tmp/work/sam3_med_agent_eval"
+PROJECT_ROOT = str(Path(__file__).resolve().parents[1])
 if PROJECT_ROOT not in sys.path:
     sys.path.insert(0, PROJECT_ROOT)
 
@@ -180,7 +181,7 @@ def summarize(records: List[Dict[str, Any]]) -> Dict[str, Any]:
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--data_root", type=str, required=True,
-                        help="如 /root/autodl-tmp/data/SAM3_data")
+                        help="例如: data/SAM3_data 或绝对路径")
     parser.add_argument("--datasets", nargs="+", required=True,
                         help="如 AMOS2022 或 AMOS2022 BraTS CHAOS")
     parser.add_argument("--val_ratio", type=float, default=0.1)

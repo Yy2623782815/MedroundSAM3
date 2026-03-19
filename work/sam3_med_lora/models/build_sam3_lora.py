@@ -1,4 +1,5 @@
 from dataclasses import asdict
+from pathlib import Path
 from typing import Any, Dict, Optional
 
 import torch
@@ -13,13 +14,14 @@ from models.lora import (
 )
 
 
-DEFAULT_BPE_PATH = "/root/autodl-tmp/repos/sam3/sam3/assets/bpe_simple_vocab_16e6.txt.gz"
-DEFAULT_CKPT_PATH = "/root/autodl-tmp/models/sam3_base/sam3.pt"
+PROJECT_ROOT = Path(__file__).resolve().parents[3]
+DEFAULT_BPE_PATH = PROJECT_ROOT / "repos" / "sam3" / "sam3" / "assets" / "bpe_simple_vocab_16e6.txt.gz"
+DEFAULT_CKPT_PATH = PROJECT_ROOT / "models" / "sam3_base" / "sam3.pt"
 
 
 def build_sam3_lora_model(
-    checkpoint_path: str = DEFAULT_CKPT_PATH,
-    bpe_path: str = DEFAULT_BPE_PATH,
+    checkpoint_path: str = str(DEFAULT_CKPT_PATH),
+    bpe_path: str = str(DEFAULT_BPE_PATH),
     device: str = "cuda",
     lora_r: int = 8,
     lora_alpha: int = 16,

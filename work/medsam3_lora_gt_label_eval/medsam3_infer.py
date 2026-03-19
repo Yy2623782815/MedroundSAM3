@@ -1,6 +1,7 @@
 # filename: /root/autodl-tmp/work/medsam3_lora_gt_label_eval/medsam3_infer.py
 import os
 import sys
+from pathlib import Path
 from typing import List, Optional
 
 import numpy as np
@@ -11,7 +12,8 @@ from torchvision.ops import nms
 import yaml
 
 # ---- Make MedSAM3 repo importable ----
-MEDSAM3_REPO_ROOT = "/root/autodl-tmp/repos/MedSAM3"
+PROJECT_ROOT = Path(__file__).resolve().parents[2]
+MEDSAM3_REPO_ROOT = str(PROJECT_ROOT / "repos" / "MedSAM3")
 if MEDSAM3_REPO_ROOT not in sys.path:
     sys.path.insert(0, MEDSAM3_REPO_ROOT)
 
@@ -56,8 +58,8 @@ class MedSAM3LoRAInferencer:
         nms_iou_threshold: float = 0.5,
         device: str = "cuda",
         load_from_HF: bool = False,
-        checkpoint_path: Optional[str] = "/root/autodl-tmp/models/sam3_base/sam3.pt",
-        bpe_path: str = "/root/autodl-tmp/repos/MedSAM3/sam3/assets/bpe_simple_vocab_16e6.txt.gz",
+        checkpoint_path: Optional[str] = str(PROJECT_ROOT / "models" / "sam3_base" / "sam3.pt"),
+        bpe_path: str = str(PROJECT_ROOT / "repos" / "MedSAM3" / "sam3" / "assets" / "bpe_simple_vocab_16e6.txt.gz"),
     ):
         with open(config_path, "r", encoding="utf-8") as f:
             self.config = yaml.safe_load(f)

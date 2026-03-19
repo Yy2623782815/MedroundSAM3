@@ -4,6 +4,7 @@ import json
 import os
 import random
 import time
+from pathlib import Path
 from typing import Any, Dict
 
 import numpy as np
@@ -19,6 +20,8 @@ from models.build_medsam3_lora import build_medsam3_lora_model, move_batch_to_de
 from models.lora import extract_lora_state_dict
 from models.sam3_forward import sam3_train_forward
 from utils.losses import binary_dice_score_from_logits, binary_iou_score_from_logits, combined_bce_dice_loss
+
+PROJECT_ROOT = Path(__file__).resolve().parents[2]
 
 
 def set_seed(seed: int) -> None:
@@ -36,6 +39,13 @@ def load_yaml(path: str) -> Dict[str, Any]:
 def save_json(data: Dict[str, Any], path: str) -> None:
     with open(path, "w", encoding="utf-8") as f:
         json.dump(data, f, ensure_ascii=False, indent=2)
+
+
+def resolve_path(path_str: str) -> str:
+    p = Path(path_str).expanduser()
+    if p.is_absolute():
+        return str(p)
+    return str((PROJECT_ROOT / p).resolve())
 
 
 def build_dataloaders(cfg: Dict[str, Any]):
@@ -99,6 +109,12 @@ def main() -> None:
     args = parser.parse_args()
 
     cfg = load_yaml(args.config)
+    cfg["data"]["train_index_jsonl"] = resolve_path(cfg["data"]["train_index_jsonl"])
+    cfg["data"]["val_index_jsonl"] = resolve_path(cfg["data"]["val_index_jsonl"])
+    cfg["model"]["sam3_repo_root"] = resolve_path(cfg["model"]["sam3_repo_root"])
+    cfg["model"]["checkpoint_path"] = resolve_path(cfg["model"]["checkpoint_path"])
+    cfg["model"]["bpe_path"] = resolve_path(cfg["model"]["bpe_path"])
+    cfg["output"]["output_dir"] = resolve_path(cfg["output"]["output_dir"])
     set_seed(int(cfg.get("seed", 42)))
 
     output_dir = cfg["output"]["output_dir"]
