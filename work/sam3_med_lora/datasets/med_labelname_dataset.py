@@ -1,6 +1,7 @@
 # filename: /root/autodl-tmp/work/sam3_med_lora/datasets/med_labelname_dataset.py
 import json
 import os
+from pathlib import Path
 import sys
 from typing import Any, Dict, List
 
@@ -9,7 +10,7 @@ import numpy as np
 import torch
 from torch.utils.data import Dataset
 
-PROJECT_ROOT = "/root/autodl-tmp/work/sam3_med_agent_eval"
+PROJECT_ROOT = str(Path(__file__).resolve().parents[1])
 if PROJECT_ROOT not in sys.path:
     sys.path.insert(0, PROJECT_ROOT)
 

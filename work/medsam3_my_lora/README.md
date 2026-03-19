@@ -38,16 +38,16 @@ train:
 
 ## 构建索引（CHAOS）
 ```bash
-export PYTHONPATH=/root/autodl-tmp/work/medsam3_my_lora:$PYTHONPATH
-python /root/autodl-tmp/work/medsam3_my_lora/tools/build_labelname_samples.py \
-  --data_root /root/autodl-tmp/data/SAM3_data \
+export PYTHONPATH=$PROJECT_ROOT/work/medsam3_my_lora:$PYTHONPATH
+python $PROJECT_ROOT/work/medsam3_my_lora/tools/build_labelname_samples.py \
+  --data_root $PROJECT_ROOT/data/SAM3_data \
   --datasets CHAOS \
-  --output_dir /root/autodl-tmp/work/medsam3_my_lora/data_index/chaos_only
+  --output_dir $PROJECT_ROOT/work/medsam3_my_lora/data_index/chaos_only
 ```
 
 ## 训练（默认 CHAOS）
 ```bash
-bash /root/autodl-tmp/work/medsam3_my_lora/scripts/run_smoke_train.sh
+bash $PROJECT_ROOT/work/medsam3_my_lora/scripts/run_smoke_train.sh
 ```
 
 输出包括：

@@ -1,14 +1,15 @@
 # filename: /root/autodl-tmp/work/sam3_med_lora/tools/test_med_dataset.py
 import os
 import sys
+from pathlib import Path
 import argparse
 
 import cv2
 import numpy as np
 
-ROOT = "/root/autodl-tmp/work/sam3_med_lora"
-if ROOT not in sys.path:
-    sys.path.insert(0, ROOT)
+ROOT = Path(__file__).resolve().parents[1]
+if str(ROOT) not in sys.path:
+    sys.path.insert(0, str(ROOT))
 
 from datasets.med_labelname_dataset import MedLabelNameDataset  # noqa: E402
 
@@ -55,8 +56,8 @@ def main():
             cv2.FONT_HERSHEY_SIMPLEX, 0.6, (0, 255, 255), 2, cv2.LINE_AA
         )
 
-        out_path = os.path.join(args.output_dir, f"sample_{i:03d}.png")
-        cv2.imwrite(out_path, vis)
+        out_path = Path(args.output_dir) / f"sample_{i:03d}.png"
+        cv2.imwrite(str(out_path), vis)
         print(
             f'[OK] idx={i} dataset={item["dataset"]} '
             f'label={item["label_name"]} ch={item["channel_idx"]} '

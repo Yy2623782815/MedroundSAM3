@@ -1,11 +1,12 @@
 import os
 import sys
+from pathlib import Path
 
 import torch
 
-PROJECT_ROOT = "/root/autodl-tmp/work/sam3_med_lora"
-if PROJECT_ROOT not in sys.path:
-    sys.path.insert(0, PROJECT_ROOT)
+PROJECT_ROOT = Path(__file__).resolve().parents[1]
+if str(PROJECT_ROOT) not in sys.path:
+    sys.path.insert(0, str(PROJECT_ROOT))
 
 from models.build_sam3_lora import build_sam3_lora_model
 
@@ -19,8 +20,8 @@ def main():
     device = "cuda" if torch.cuda.is_available() else "cpu"
 
     model, extra = build_sam3_lora_model(
-        checkpoint_path="/root/autodl-tmp/models/sam3_base/sam3.pt",
-        bpe_path="/root/autodl-tmp/repos/sam3/sam3/assets/bpe_simple_vocab_16e6.txt.gz",
+        checkpoint_path=str(PROJECT_ROOT.parents[1] / "models" / "sam3_base" / "sam3.pt"),
+        bpe_path=str(PROJECT_ROOT.parents[1] / "repos" / "sam3" / "sam3" / "assets" / "bpe_simple_vocab_16e6.txt.gz"),
         device=device,
         lora_r=8,
         lora_alpha=16,

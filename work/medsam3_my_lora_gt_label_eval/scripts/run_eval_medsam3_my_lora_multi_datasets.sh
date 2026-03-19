@@ -1,17 +1,21 @@
 #!/bin/bash
-set -e
+set -euo pipefail
 
-DATA_ROOT="${DATA_ROOT:-/root/autodl-tmp/data/SAM3_data}"
-OUTPUT_ROOT="${OUTPUT_ROOT:-/root/autodl-tmp/work/medsam3_my_lora_gt_label_eval/outputs}"
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+PROJECT_ROOT="$(cd "${SCRIPT_DIR}/../../.." && pwd)"
+EVAL_ROOT="$(cd "${SCRIPT_DIR}/.." && pwd)"
+
+DATA_ROOT="${DATA_ROOT:-${PROJECT_ROOT}/data/SAM3_data}"
+OUTPUT_ROOT="${OUTPUT_ROOT:-${EVAL_ROOT}/outputs}"
 
 SPLIT="${SPLIT:-test}"
 MAX_SAMPLES="${MAX_SAMPLES:-0}"
 
-SAM3_REPO_ROOT="${SAM3_REPO_ROOT:-/root/autodl-tmp/repos/MedSAM3}"
-MY_LORA_PROJECT_ROOT="${MY_LORA_PROJECT_ROOT:-/root/autodl-tmp/work/medsam3_my_lora}"
-LORA_CHECKPOINT_PATH="${LORA_CHECKPOINT_PATH:-/root/autodl-tmp/work/medsam3_my_lora/outputs/chaos_smoke/checkpoints/best.pt}"
-CHECKPOINT_PATH="${CHECKPOINT_PATH:-/root/autodl-tmp/models/sam3_base/sam3.pt}"
-BPE_PATH="${BPE_PATH:-/root/autodl-tmp/repos/MedSAM3/sam3/assets/bpe_simple_vocab_16e6.txt.gz}"
+SAM3_REPO_ROOT="${SAM3_REPO_ROOT:-${PROJECT_ROOT}/repos/MedSAM3}"
+MY_LORA_PROJECT_ROOT="${MY_LORA_PROJECT_ROOT:-${PROJECT_ROOT}/work/medsam3_my_lora}"
+LORA_CHECKPOINT_PATH="${LORA_CHECKPOINT_PATH:-${PROJECT_ROOT}/work/medsam3_my_lora/outputs/chaos_smoke/checkpoints/best.pt}"
+CHECKPOINT_PATH="${CHECKPOINT_PATH:-${PROJECT_ROOT}/models/sam3_base/sam3.pt}"
+BPE_PATH="${BPE_PATH:-${PROJECT_ROOT}/repos/MedSAM3/sam3/assets/bpe_simple_vocab_16e6.txt.gz}"
 
 DEVICE="${DEVICE:-cuda}"
 RESOLUTION="${RESOLUTION:-1008}"
@@ -24,7 +28,7 @@ DATASETS="${DATASETS:-}"
 # 为 1 时自动评测 data_root 下所有可发现数据集
 USE_ALL_DATASETS="${USE_ALL_DATASETS:-0}"
 
-cd /root/autodl-tmp/work/medsam3_my_lora_gt_label_eval
+cd "${EVAL_ROOT}"
 
 CMD=(
 python eval_medsam3_my_lora_gt_label_batch.py

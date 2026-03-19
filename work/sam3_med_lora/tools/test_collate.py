@@ -1,18 +1,19 @@
 import os
 import sys
+from pathlib import Path
 from torch.utils.data import DataLoader
 
-PROJECT_ROOT = "/root/autodl-tmp/work/sam3_med_lora"
-DATASETS_DIR = os.path.join(PROJECT_ROOT, "datasets")
-if DATASETS_DIR not in sys.path:
-    sys.path.insert(0, DATASETS_DIR)
+PROJECT_ROOT = Path(__file__).resolve().parents[1]
+DATASETS_DIR = PROJECT_ROOT / "datasets"
+if str(DATASETS_DIR) not in sys.path:
+    sys.path.insert(0, str(DATASETS_DIR))
 
 from collate import med_labelname_collate_fn
 from med_labelname_dataset import MedLabelNameDataset
 
 def main():
     dataset = MedLabelNameDataset(
-        index_jsonl="/root/autodl-tmp/work/sam3_med_lora/data_index/chaos_only/train_samples.jsonl",
+        index_jsonl=str(PROJECT_ROOT / "data_index" / "chaos_only" / "train_samples.jsonl"),
         image_size=512,
         normalize=True,
     )

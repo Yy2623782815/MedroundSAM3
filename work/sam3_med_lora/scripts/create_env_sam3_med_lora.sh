@@ -1,9 +1,13 @@
 #!/usr/bin/env bash
-set -e
+set -euo pipefail
 
-ENV_PATH="/root/autodl-tmp/conda_envs/sam3_med_lora"
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+PROJECT_ROOT="$(cd "${SCRIPT_DIR}/.." && pwd)"
+REPO_ROOT="$(cd "${PROJECT_ROOT}/../.." && pwd)"
+
+ENV_PATH="${ENV_PATH:-${REPO_ROOT}/conda_envs/sam3_med_lora}"
 PYTHON_VERSION="3.12"
-SAM3_REPO="/root/autodl-tmp/repos/sam3"
+SAM3_REPO="${SAM3_REPO:-${REPO_ROOT}/repos/sam3}"
 
 echo "[0/7] remove old env if exists"
 if [ -d "${ENV_PATH}" ]; then
