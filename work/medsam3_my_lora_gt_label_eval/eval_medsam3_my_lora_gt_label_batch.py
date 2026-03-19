@@ -1,6 +1,7 @@
 import argparse
 import json
 import os
+from pathlib import Path
 import traceback
 from collections import defaultdict
 
@@ -612,18 +613,18 @@ def parse_args():
     )
     parser.add_argument("--output_dir", type=str, required=True)
 
-    parser.add_argument("--sam3_repo_root", type=str, default="/root/autodl-tmp/repos/MedSAM3")
-    parser.add_argument("--my_lora_project_root", type=str, default="/root/autodl-tmp/work/medsam3_my_lora")
+    parser.add_argument("--sam3_repo_root", type=str, default=str(PROJECT_ROOT / "repos" / "MedSAM3"))
+    parser.add_argument("--my_lora_project_root", type=str, default=str(PROJECT_ROOT / "work" / "medsam3_my_lora"))
     parser.add_argument(
         "--lora_checkpoint_path",
         type=str,
-        default="/root/autodl-tmp/work/medsam3_my_lora/outputs/chaos_smoke/checkpoints/best.pt",
+        default=str(PROJECT_ROOT / "work" / "medsam3_my_lora" / "outputs" / "chaos_smoke" / "checkpoints" / "best.pt"),
     )
-    parser.add_argument("--checkpoint_path", type=str, default="/root/autodl-tmp/models/sam3_base/sam3.pt")
+    parser.add_argument("--checkpoint_path", type=str, default=str(PROJECT_ROOT / "models" / "sam3_base" / "sam3.pt"))
     parser.add_argument(
         "--bpe_path",
         type=str,
-        default="/root/autodl-tmp/repos/MedSAM3/sam3/assets/bpe_simple_vocab_16e6.txt.gz",
+        default=str(PROJECT_ROOT / "repos" / "MedSAM3" / "sam3" / "assets" / "bpe_simple_vocab_16e6.txt.gz"),
     )
 
     parser.add_argument("--device", type=str, default="cuda")

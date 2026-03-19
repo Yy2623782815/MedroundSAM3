@@ -2,6 +2,7 @@
 import argparse
 import json
 import os
+from pathlib import Path
 import traceback
 from collections import defaultdict
 
@@ -25,6 +26,9 @@ from medical_sam3_infer import (
 )
 from metrics import dice_score, iou_score
 from viz import visualize
+
+PROJECT_ROOT = Path(__file__).resolve().parents[2]
+DEFAULT_SAM3_REPO_ROOT = PROJECT_ROOT / "repos" / "sam3"
 
 
 def _metric_stats(items, metric_key):
@@ -537,7 +541,7 @@ def parse_args():
     parser.add_argument(
         "--sam3_repo_root",
         type=str,
-        default="/root/autodl-tmp/repos/sam3",
+        default=str(DEFAULT_SAM3_REPO_ROOT),
         help="Root path of original sam3 repo",
     )
     parser.add_argument(

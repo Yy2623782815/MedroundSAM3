@@ -2,8 +2,8 @@
 seed: 42
 
 data:
-  train_index_jsonl: /root/autodl-tmp/work/sam3_med_lora/data_index/chaos_only/train_samples.jsonl
-  val_index_jsonl: /root/autodl-tmp/work/sam3_med_lora/data_index/chaos_only/val_samples.jsonl
+  train_index_jsonl: data_index/chaos_only/train_samples.jsonl
+  val_index_jsonl: data_index/chaos_only/val_samples.jsonl
   image_size: 1008
   normalize: true
 
@@ -17,8 +17,8 @@ data:
   drop_last: false
 
 model:
-  checkpoint_path: /root/autodl-tmp/models/sam3_base/sam3.pt
-  bpe_path: /root/autodl-tmp/repos/sam3/sam3/assets/bpe_simple_vocab_16e6.txt.gz
+  checkpoint_path: models/sam3_base/sam3.pt
+  bpe_path: repos/sam3/sam3/assets/bpe_simple_vocab_16e6.txt.gz
   device: cuda
   load_from_hf: false
 
@@ -43,4 +43,4 @@ train:
   val_every_n_epochs: 1
 
 output:
-  output_dir: /root/autodl-tmp/work/sam3_med_lora/outputs/chaos_smoke_lora
+  output_dir: work/sam3_med_lora/outputs/chaos_smoke_lora

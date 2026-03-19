@@ -2,18 +2,19 @@ import inspect
 import json
 import os
 import sys
+from pathlib import Path
 from typing import Any, Dict
 
 import torch
 from torch.utils.data import DataLoader
 
-PROJECT_ROOT = "/root/autodl-tmp/work/sam3_med_lora"
-DATASETS_DIR = os.path.join(PROJECT_ROOT, "datasets")
-MODELS_DIR = os.path.join(PROJECT_ROOT, "models")
+PROJECT_ROOT = Path(__file__).resolve().parents[1]
+DATASETS_DIR = PROJECT_ROOT / "datasets"
+MODELS_DIR = PROJECT_ROOT / "models"
 
-for p in [PROJECT_ROOT, DATASETS_DIR, MODELS_DIR]:
-    if p not in sys.path:
-        sys.path.insert(0, p)
+for path_entry in [PROJECT_ROOT, DATASETS_DIR, MODELS_DIR]:
+    if str(path_entry) not in sys.path:
+        sys.path.insert(0, str(path_entry))
 
 from collate import med_labelname_collate_fn
 from med_labelname_dataset import MedLabelNameDataset
@@ -61,7 +62,7 @@ def main():
     device = "cuda" if torch.cuda.is_available() else "cpu"
 
     dataset = MedLabelNameDataset(
-        index_jsonl="/root/autodl-tmp/work/sam3_med_lora/data_index/chaos_only/train_samples.jsonl",
+        index_jsonl=str(PROJECT_ROOT / "data_index" / "chaos_only" / "train_samples.jsonl"),
         image_size=512,
         normalize=True,
     )
@@ -78,8 +79,8 @@ def main():
     masks = batch["masks"].to(device)
 
     model, extra = build_sam3_lora_model(
-        checkpoint_path="/root/autodl-tmp/models/sam3_base/sam3.pt",
-        bpe_path="/root/autodl-tmp/repos/sam3/sam3/assets/bpe_simple_vocab_16e6.txt.gz",
+        checkpoint_path=str(PROJECT_ROOT.parents[1] / "models" / "sam3_base" / "sam3.pt"),
+        bpe_path=str(PROJECT_ROOT.parents[1] / "repos" / "sam3" / "sam3" / "assets" / "bpe_simple_vocab_16e6.txt.gz"),
         device=device,
         lora_r=8,
         lora_alpha=16,

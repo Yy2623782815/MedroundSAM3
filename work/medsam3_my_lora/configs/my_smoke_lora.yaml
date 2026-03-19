@@ -1,8 +1,8 @@
 seed: 42
 
 data:
-  train_index_jsonl: /root/autodl-tmp/work/medsam3_my_lora/data_index/chaos_only/train_samples.jsonl
-  val_index_jsonl: /root/autodl-tmp/work/medsam3_my_lora/data_index/chaos_only/val_samples.jsonl
+  train_index_jsonl: work/medsam3_my_lora/data_index/chaos_only/train_samples.jsonl
+  val_index_jsonl: work/medsam3_my_lora/data_index/chaos_only/val_samples.jsonl
   image_size: 1008
   normalize: true
   batch_size: 4
@@ -11,9 +11,9 @@ data:
   pin_memory: true
 
 model:
-  sam3_repo_root: /root/autodl-tmp/repos/MedSAM3
-  checkpoint_path: /root/autodl-tmp/models/sam3_base/sam3.pt
-  bpe_path: /root/autodl-tmp/repos/MedSAM3/sam3/assets/bpe_simple_vocab_16e6.txt.gz
+  sam3_repo_root: repos/MedSAM3
+  checkpoint_path: models/sam3_base/sam3.pt
+  bpe_path: repos/MedSAM3/sam3/assets/bpe_simple_vocab_16e6.txt.gz
   device: cuda
   load_from_hf: false
 
@@ -39,4 +39,4 @@ train:
     reduce: mean       # mean | max
 
 output:
-  output_dir: /root/autodl-tmp/work/medsam3_my_lora/outputs/chaos_smoke
+  output_dir: work/medsam3_my_lora/outputs/chaos_smoke

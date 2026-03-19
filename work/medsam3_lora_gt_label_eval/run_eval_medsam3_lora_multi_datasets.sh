@@ -1,10 +1,14 @@
 #!/bin/bash
-set -e
+set -euo pipefail
+
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+PROJECT_ROOT="$(cd "${SCRIPT_DIR}/../.." && pwd)"
+EVAL_ROOT="${SCRIPT_DIR}"
 
 # 数据根目录
-DATA_ROOT="${DATA_ROOT:-/root/autodl-tmp/data/SAM3_data}"
+DATA_ROOT="${DATA_ROOT:-${PROJECT_ROOT}/data/SAM3_data}"
 # 输出根目录
-OUTPUT_ROOT="${OUTPUT_ROOT:-/root/autodl-tmp/work/medsam3_lora_gt_label_eval/outputs}"
+OUTPUT_ROOT="${OUTPUT_ROOT:-${EVAL_ROOT}/outputs}"
 
 # 评测 split: training / test / all
 SPLIT="${SPLIT:-test}"
@@ -12,11 +16,11 @@ SPLIT="${SPLIT:-test}"
 MAX_SAMPLES="${MAX_SAMPLES:-0}"
 
 # MedSAM3 配置文件
-CONFIG_PATH="${CONFIG_PATH:-/root/autodl-tmp/repos/MedSAM3/configs/full_lora_config.yaml}"
+CONFIG_PATH="${CONFIG_PATH:-${PROJECT_ROOT}/repos/MedSAM3/configs/full_lora_config.yaml}"
 # LoRA 权重路径
-LORA_WEIGHTS="${LORA_WEIGHTS:-/root/autodl-tmp/models/medsam3_lora/best_lora_weights.pt}"
+LORA_WEIGHTS="${LORA_WEIGHTS:-${PROJECT_ROOT}/models/medsam3_lora/best_lora_weights.pt}"
 # 本地 SAM3 基础权重
-CHECKPOINT_PATH="${CHECKPOINT_PATH:-/root/autodl-tmp/models/sam3_base/sam3.pt}"
+CHECKPOINT_PATH="${CHECKPOINT_PATH:-${PROJECT_ROOT}/models/sam3_base/sam3.pt}"
 
 # 推理设备
 DEVICE="${DEVICE:-cuda}"
@@ -37,7 +41,7 @@ DATASETS=(
   SegRap2023
 )
 
-cd /root/autodl-tmp/work/medsam3_lora_gt_label_eval
+cd "${EVAL_ROOT}"
 
 python eval_medsam3_lora_gt_label_batch.py \
   --data_root "${DATA_ROOT}" \

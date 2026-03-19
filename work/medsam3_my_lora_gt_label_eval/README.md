@@ -44,43 +44,43 @@ work/medsam3_my_lora_gt_label_eval/
 ### 3.1 一键脚本（推荐）
 
 ```bash
-bash /root/autodl-tmp/work/medsam3_my_lora_gt_label_eval/scripts/run_eval_medsam3_my_lora_multi_datasets.sh
+bash $PROJECT_ROOT/work/medsam3_my_lora_gt_label_eval/scripts/run_eval_medsam3_my_lora_multi_datasets.sh
 ```
 
 可通过环境变量覆盖默认参数，例如：
 
 ```bash
-DATA_ROOT=/root/autodl-tmp/data/SAM3_data \
-OUTPUT_ROOT=/root/autodl-tmp/work/medsam3_my_lora_gt_label_eval/outputs \
+DATA_ROOT=$PROJECT_ROOT/data/SAM3_data \
+OUTPUT_ROOT=$PROJECT_ROOT/work/medsam3_my_lora_gt_label_eval/outputs \
 SPLIT=test \
 MAX_SAMPLES=20 \
 DATASETS="CHAOS BraTS" \
-LORA_CHECKPOINT_PATH=/root/autodl-tmp/work/medsam3_my_lora/outputs/chaos_smoke/checkpoints/best.pt \
-bash /root/autodl-tmp/work/medsam3_my_lora_gt_label_eval/scripts/run_eval_medsam3_my_lora_multi_datasets.sh
+LORA_CHECKPOINT_PATH=$PROJECT_ROOT/work/medsam3_my_lora/outputs/chaos_smoke/checkpoints/best.pt \
+bash $PROJECT_ROOT/work/medsam3_my_lora_gt_label_eval/scripts/run_eval_medsam3_my_lora_multi_datasets.sh
 ```
 
 如果你想自动评测 `data_root` 下全部可发现数据集：
 
 ```bash
 USE_ALL_DATASETS=1 \
-bash /root/autodl-tmp/work/medsam3_my_lora_gt_label_eval/scripts/run_eval_medsam3_my_lora_multi_datasets.sh
+bash $PROJECT_ROOT/work/medsam3_my_lora_gt_label_eval/scripts/run_eval_medsam3_my_lora_multi_datasets.sh
 ```
 
 ### 3.2 直接 Python 命令
 
 ```bash
-cd /root/autodl-tmp/work/medsam3_my_lora_gt_label_eval
+cd $PROJECT_ROOT/work/medsam3_my_lora_gt_label_eval
 python eval_medsam3_my_lora_gt_label_batch.py \
-  --data_root /root/autodl-tmp/data/SAM3_data \
+  --data_root $PROJECT_ROOT/data/SAM3_data \
   --datasets CHAOS BraTS \
   --split test \
   --max_samples 0 \
-  --output_dir /root/autodl-tmp/work/medsam3_my_lora_gt_label_eval/outputs \
-  --sam3_repo_root /root/autodl-tmp/repos/MedSAM3 \
-  --my_lora_project_root /root/autodl-tmp/work/medsam3_my_lora \
-  --lora_checkpoint_path /root/autodl-tmp/work/medsam3_my_lora/outputs/chaos_smoke/checkpoints/best.pt \
-  --checkpoint_path /root/autodl-tmp/models/sam3_base/sam3.pt \
-  --bpe_path /root/autodl-tmp/repos/MedSAM3/sam3/assets/bpe_simple_vocab_16e6.txt.gz \
+  --output_dir $PROJECT_ROOT/work/medsam3_my_lora_gt_label_eval/outputs \
+  --sam3_repo_root $PROJECT_ROOT/repos/MedSAM3 \
+  --my_lora_project_root $PROJECT_ROOT/work/medsam3_my_lora \
+  --lora_checkpoint_path $PROJECT_ROOT/work/medsam3_my_lora/outputs/chaos_smoke/checkpoints/best.pt \
+  --checkpoint_path $PROJECT_ROOT/models/sam3_base/sam3.pt \
+  --bpe_path $PROJECT_ROOT/repos/MedSAM3/sam3/assets/bpe_simple_vocab_16e6.txt.gz \
   --device cuda \
   --resolution 1008 \
   --detection_threshold 0.5 \
