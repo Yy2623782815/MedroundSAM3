@@ -1,0 +1,42 @@
+seed: 42
+
+data:
+  train_index_jsonl: /root/autodl-tmp/work/medsam3_my_lora/data_index/chaos_only/train_samples.jsonl
+  val_index_jsonl: /root/autodl-tmp/work/medsam3_my_lora/data_index/chaos_only/val_samples.jsonl
+  image_size: 1008
+  normalize: true
+  batch_size: 16
+  val_batch_size: 16
+  num_workers: 4
+  pin_memory: true
+
+model:
+  sam3_repo_root: /root/autodl-tmp/repos/MedSAM3
+  checkpoint_path: /root/autodl-tmp/models/sam3_base/sam3.pt
+  bpe_path: /root/autodl-tmp/repos/MedSAM3/sam3/assets/bpe_simple_vocab_16e6.txt.gz
+  device: cuda
+  load_from_hf: false
+
+lora:
+  r: 8
+  alpha: 16
+  dropout: 0.05
+  train_bias: false
+  train_norm: false
+
+train:
+  epochs: 2
+  lr: 1.0e-4
+  weight_decay: 1.0e-2
+  grad_clip: 1.0
+  bce_weight: 0.5
+  dice_weight: 0.5
+
+  # 多 query 掩码 -> 单监督掩码的可配置策略
+  query_select:
+    mode: logits_max   # logits_max | mask_mean
+    topk: 1            # >=1；若 >1 会先选 topk query 再做 reduce
+    reduce: mean       # mean | max
+
+output:
+  output_dir: /root/autodl-tmp/work/medsam3_my_lora/outputs/chaos_smoke

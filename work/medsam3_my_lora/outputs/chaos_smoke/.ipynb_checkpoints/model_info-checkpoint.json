@@ -1,0 +1,30 @@
+{
+  "sam3_repo_root": "/root/autodl-tmp/repos/MedSAM3",
+  "checkpoint_path": "/root/autodl-tmp/models/sam3_base/sam3.pt",
+  "bpe_path": "/root/autodl-tmp/repos/MedSAM3/sam3/assets/bpe_simple_vocab_16e6.txt.gz",
+  "load_from_hf": false,
+  "lora_config": {
+    "r": 8,
+    "alpha": 16,
+    "dropout": 0.05,
+    "target_linear_names": [
+      "attn.proj",
+      "mlp.fc1",
+      "mlp.fc2",
+      "prompt_mlp",
+      "cross_attend_prompt",
+      "dot_prod_scoring",
+      "segmentation_head",
+      "self_attention",
+      "cross_attention"
+    ],
+    "exclude_linear_names": [
+      "patch_embed",
+      "pos_embed",
+      "cls_token",
+      "mask_token",
+      "out_proj"
+    ]
+  },
+  "num_replaced_modules": 103
+}
