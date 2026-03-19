@@ -2,6 +2,8 @@
 
 基于 `repos/MedSAM3` 的 LoRA 微调工程（独立目录），用于你的医学图像 + `label_name` prompt 二值分割训练。
 
+> 以下命令默认在仓库根目录执行（`MedroundSAM3/`）。
+
 ## 目录
 - `datasets/`: 数据集与 collate
 - `models/`: LoRA 注入、MedSAM3 本地模型构建、forward 适配
@@ -38,16 +40,16 @@ train:
 
 ## 构建索引（CHAOS）
 ```bash
-export PYTHONPATH=$PROJECT_ROOT/work/medsam3_my_lora:$PYTHONPATH
-python $PROJECT_ROOT/work/medsam3_my_lora/tools/build_labelname_samples.py \
-  --data_root $PROJECT_ROOT/data/SAM3_data \
+export PYTHONPATH=work/medsam3_my_lora:$PYTHONPATH
+python work/medsam3_my_lora/tools/build_labelname_samples.py \
+  --data_root data/SAM3_data \
   --datasets CHAOS \
-  --output_dir $PROJECT_ROOT/work/medsam3_my_lora/data_index/chaos_only
+  --output_dir work/medsam3_my_lora/data_index/chaos_only
 ```
 
 ## 训练（默认 CHAOS）
 ```bash
-bash $PROJECT_ROOT/work/medsam3_my_lora/scripts/run_smoke_train.sh
+bash work/medsam3_my_lora/scripts/run_smoke_train.sh
 ```
 
 输出包括：
