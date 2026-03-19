@@ -1,5 +1,6 @@
 # filename: /root/autodl-tmp/work/sam3_med_lora/tools/check_empty_masks_all_datasets.py
 import os
+from pathlib import Path
 import sys
 import json
 import argparse
@@ -8,7 +9,7 @@ from typing import Any, Dict, List
 import numpy as np
 from tqdm import tqdm
 
-PROJECT_ROOT = "/root/autodl-tmp/work/sam3_med_agent_eval"
+PROJECT_ROOT = str(Path(__file__).resolve().parents[1])
 if PROJECT_ROOT not in sys.path:
     sys.path.insert(0, PROJECT_ROOT)
 
@@ -184,7 +185,7 @@ def main():
     parser.add_argument(
         "--data_root",
         type=str,
-        default="/root/autodl-tmp/data/SAM3_data",
+        default=str(Path(__file__).resolve().parents[2] / "data" / "SAM3_data"),
         help="数据根目录",
     )
     parser.add_argument(
@@ -196,7 +197,7 @@ def main():
     parser.add_argument(
         "--output_dir",
         type=str,
-        default="/root/autodl-tmp/work/sam3_med_lora/empty_mask_check_all",
+        default=str(Path(__file__).resolve().parents[1] / "empty_mask_check_all"),
         help="输出目录",
     )
     args = parser.parse_args()

@@ -7,14 +7,15 @@ import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 
+PROJECT_ROOT = Path(__file__).resolve().parents[2]
 
 # ========= 用户可修改路径 =========
 MODEL_FILES = {
-    "Medical-SAM3": "/root/autodl-tmp/work/medical_sam3_gt_label_eval/outputs/multi_datasets_test_0/all_datasets_summary.json",
-    "MedSAM3-LoRA": "/root/autodl-tmp/work/medsam3_lora_gt_label_eval/outputs/all_datasets_summary.json",
-    "SAM3": "/root/autodl-tmp/work/sam3_gt_label_eval/outputs/multi_datasets_test_0/all_datasets_summary.json",
+    "Medical-SAM3": str(PROJECT_ROOT / "work" / "medical_sam3_gt_label_eval" / "outputs" / "multi_datasets_test_0" / "all_datasets_summary.json"),
+    "MedSAM3-LoRA": str(PROJECT_ROOT / "work" / "medsam3_lora_gt_label_eval" / "outputs" / "all_datasets_summary.json"),
+    "SAM3": str(PROJECT_ROOT / "work" / "sam3_gt_label_eval" / "outputs" / "multi_datasets_test_0" / "all_datasets_summary.json"),
 }
-OUTPUT_DIR = "/root/autodl-tmp/work/three_model_anysis"
+OUTPUT_DIR = str(PROJECT_ROOT / "work" / "three_model_anysis")
 
 
 def ensure_dir(path: Path):

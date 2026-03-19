@@ -1,5 +1,6 @@
 # filename: /root/autodl-tmp/work/sam3_med_lora/tools/check_med_sam3_data.py
 import os
+from pathlib import Path
 import sys
 import json
 import cv2
@@ -11,7 +12,7 @@ import numpy as np
 
 # 让脚本能找到你的 med_data_utils.py
 CURRENT_DIR = os.path.dirname(os.path.abspath(__file__))
-PROJECT_ROOT = "/root/autodl-tmp/work/sam3_med_agent_eval"
+PROJECT_ROOT = str(Path(__file__).resolve().parents[1])
 if PROJECT_ROOT not in sys.path:
     sys.path.insert(0, PROJECT_ROOT)
 
@@ -234,7 +235,7 @@ def save_one_case_visuals(
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--dataset_root", type=str, required=True,
-                        help="如 /root/autodl-tmp/data/SAM3_data/AMOS2022")
+                        help="例如: data/SAM3_data/AMOS2022 或绝对路径")
     parser.add_argument("--json_name", type=str, required=True,
                         help="如 MultiEN_AMOS2022.json")
     parser.add_argument("--split", type=str, default="training", choices=["training", "test"])
