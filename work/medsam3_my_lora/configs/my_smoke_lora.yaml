@@ -5,8 +5,16 @@ data:
   val_index_jsonl: work/medsam3_my_lora/data_index/chaos_only/val_samples.jsonl
   image_size: 1008
   normalize: true
+
+  # 推荐显式使用 per-device batch。global_batch_size 可选，若设置则会按 world_size 自动折算。
+  batch_size_per_device: 4
+  val_batch_size_per_device: 4
+  # global_batch_size: 8
+
+  # 兼容旧字段（未配置 batch_size_per_device 时会回退读取）
   batch_size: 4
   val_batch_size: 4
+
   num_workers: 4
   pin_memory: true
 
