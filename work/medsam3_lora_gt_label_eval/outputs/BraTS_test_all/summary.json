@@ -1,0 +1,108 @@
+{
+  "num_records": 1517,
+  "mean_dice": 0.46686780262865124,
+  "mean_iou": 0.3594245596272672,
+  "max_dice": 0.9450156459544032,
+  "min_dice": 0.0,
+  "max_iou": 0.8957627118644068,
+  "min_iou": 0.0,
+  "num_failures": 65,
+  "num_no_pred_mask": 73,
+  "by_label": {
+    "necrotic_tumor_core": {
+      "count": 417,
+      "num_valid": 417,
+      "num_errors": 0,
+      "num_no_pred_mask": 29,
+      "mean_dice": 0.30683201079207606,
+      "max_dice": 0.9450156459544032,
+      "min_dice": 0.0,
+      "mean_iou": 0.22251589603084346,
+      "max_iou": 0.8957627118644068,
+      "min_iou": 0.0
+    },
+    "peritumoral_edema": {
+      "count": 649,
+      "num_valid": 649,
+      "num_errors": 0,
+      "num_no_pred_mask": 20,
+      "mean_dice": 0.6129206903510563,
+      "max_dice": 0.9419824448726183,
+      "min_dice": 0.0,
+      "mean_iou": 0.48374225873396226,
+      "max_iou": 0.8903278025091056,
+      "min_iou": 0.0
+    },
+    "enhancing_tumor": {
+      "count": 386,
+      "num_valid": 386,
+      "num_errors": 0,
+      "num_no_pred_mask": 24,
+      "mean_dice": 0.3941906033126173,
+      "max_dice": 0.9386339381003201,
+      "min_dice": 0.0,
+      "mean_iou": 0.2983072694704368,
+      "max_iou": 0.8843640020110608,
+      "min_iou": 0.0
+    },
+    "单标签追问": {
+      "count": 65,
+      "num_valid": 0,
+      "num_errors": 65,
+      "num_no_pred_mask": 0,
+      "mean_dice": null,
+      "max_dice": null,
+      "min_dice": null,
+      "mean_iou": null,
+      "max_iou": null,
+      "min_iou": null
+    }
+  },
+  "by_turn": {
+    "1": {
+      "count": 650,
+      "num_valid": 650,
+      "num_errors": 0,
+      "num_no_pred_mask": 42,
+      "mean_dice": 0.4225127437127318,
+      "max_dice": 0.9450156459544032,
+      "min_dice": 0.0,
+      "mean_iou": 0.32845108227109276,
+      "max_iou": 0.8957627118644068,
+      "min_iou": 0.0
+    },
+    "2": {
+      "count": 563,
+      "num_valid": 498,
+      "num_errors": 65,
+      "num_no_pred_mask": 20,
+      "mean_dice": 0.5437650600644022,
+      "max_dice": 0.9335071707953064,
+      "min_dice": 0.0,
+      "mean_iou": 0.41707789664900646,
+      "max_iou": 0.8753056234718827,
+      "min_iou": 0.0
+    },
+    "3": {
+      "count": 304,
+      "num_valid": 304,
+      "num_errors": 0,
+      "num_no_pred_mask": 11,
+      "mean_dice": 0.4357360726692553,
+      "max_dice": 0.9386339381003201,
+      "min_dice": 0.0,
+      "mean_iou": 0.33120547556373814,
+      "max_iou": 0.8843640020110608,
+      "min_iou": 0.0
+    }
+  },
+  "failure_reasons": {
+    "gt_label_not_found": 65
+  },
+  "split_source_counts": {
+    "test": 1517
+  },
+  "dataset": "BraTS",
+  "split": "test",
+  "max_samples": 0
+}

@@ -1,0 +1,149 @@
+{
+  "num_datasets": 1,
+  "datasets": {
+    "CHAOS": {
+      "num_records": 124,
+      "mean_dice": 0.9038362768392657,
+      "mean_iou": 0.8457102435209435,
+      "max_dice": 0.9837837837837838,
+      "min_dice": 0.0,
+      "max_iou": 0.9680851063829787,
+      "min_iou": 0.0,
+      "num_failures": 4,
+      "num_no_pred_mask": 0,
+      "by_label": {
+        "kidney_right": {
+          "count": 27,
+          "num_valid": 27,
+          "num_errors": 0,
+          "num_no_pred_mask": 0,
+          "mean_dice": 0.8774875307739967,
+          "max_dice": 0.9818941504178273,
+          "min_dice": 0.0,
+          "mean_iou": 0.8210153156407732,
+          "max_iou": 0.9644322845417237,
+          "min_iou": 0.0
+        },
+        "kidney_left": {
+          "count": 26,
+          "num_valid": 26,
+          "num_errors": 0,
+          "num_no_pred_mask": 0,
+          "mean_dice": 0.8899250398567868,
+          "max_dice": 0.9837837837837838,
+          "min_dice": 0.33125,
+          "mean_iou": 0.835367081270381,
+          "max_iou": 0.9680851063829787,
+          "min_iou": 0.19850187265917604
+        },
+        "liver": {
+          "count": 43,
+          "num_valid": 43,
+          "num_errors": 0,
+          "num_no_pred_mask": 0,
+          "mean_dice": 0.914897708431965,
+          "max_dice": 0.9829251853516063,
+          "min_dice": 0.7121179739260526,
+          "mean_iou": 0.8507602359904776,
+          "max_iou": 0.966423680141374,
+          "min_iou": 0.5529372718221042
+        },
+        "spleen": {
+          "count": 24,
+          "num_valid": 24,
+          "num_errors": 0,
+          "num_no_pred_mask": 0,
+          "mean_dice": 0.9287307246234584,
+          "max_dice": 0.9800221975582686,
+          "min_dice": 0.674314850223072,
+          "mean_iou": 0.8756492266496622,
+          "max_iou": 0.9608269858541894,
+          "min_iou": 0.5086538461538461
+        },
+        "单标签追问": {
+          "count": 4,
+          "num_valid": 0,
+          "num_errors": 4,
+          "num_no_pred_mask": 0,
+          "mean_dice": null,
+          "max_dice": null,
+          "min_dice": null,
+          "mean_iou": null,
+          "max_iou": null,
+          "min_iou": null
+        }
+      },
+      "by_turn": {
+        "1": {
+          "count": 51,
+          "num_valid": 51,
+          "num_errors": 0,
+          "num_no_pred_mask": 0,
+          "mean_dice": 0.8999586303527568,
+          "max_dice": 0.9829251853516063,
+          "min_dice": 0.0,
+          "mean_iou": 0.8382994968140218,
+          "max_iou": 0.966423680141374,
+          "min_iou": 0.0
+        },
+        "2": {
+          "count": 45,
+          "num_valid": 41,
+          "num_errors": 4,
+          "num_no_pred_mask": 0,
+          "mean_dice": 0.8885593210432967,
+          "max_dice": 0.9818941504178273,
+          "min_dice": 0.33125,
+          "mean_iou": 0.8297084333628337,
+          "max_iou": 0.9644322845417237,
+          "min_iou": 0.19850187265917604
+        },
+        "3": {
+          "count": 21,
+          "num_valid": 21,
+          "num_errors": 0,
+          "num_no_pred_mask": 0,
+          "mean_dice": 0.9534948466299898,
+          "max_dice": 0.9837837837837838,
+          "min_dice": 0.8653295128939829,
+          "mean_iou": 0.9122175871268462,
+          "max_iou": 0.9680851063829787,
+          "min_iou": 0.7626262626262627
+        },
+        "4": {
+          "count": 7,
+          "num_valid": 7,
+          "num_errors": 0,
+          "num_no_pred_mask": 0,
+          "mean_dice": 0.8725913043880436,
+          "max_dice": 0.962640099626401,
+          "min_dice": 0.674314850223072,
+          "mean_iou": 0.7939056839225905,
+          "max_iou": 0.9279711884753902,
+          "min_iou": 0.5086538461538461
+        }
+      },
+      "failure_reasons": {
+        "gt_label_not_found": 4
+      },
+      "split_source_counts": {
+        "test": 124
+      },
+      "dataset": "CHAOS",
+      "split": "test",
+      "max_samples": 0
+    }
+  },
+  "overall_mean_dice_macro": 0.9038362768392657,
+  "overall_mean_iou_macro": 0.8457102435209435,
+  "overall_max_dice_macro": 0.9837837837837838,
+  "overall_min_dice_macro": 0.0,
+  "overall_max_iou_macro": 0.9680851063829787,
+  "overall_min_iou_macro": 0.0,
+  "overall_num_no_pred_mask": 0,
+  "split": "test",
+  "max_samples": 0,
+  "resolution": 1008,
+  "detection_threshold": 0.5,
+  "nms_iou_threshold": 0.5
+}

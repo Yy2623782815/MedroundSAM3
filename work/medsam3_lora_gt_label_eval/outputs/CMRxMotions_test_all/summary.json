@@ -1,0 +1,94 @@
+{
+  "num_records": 306,
+  "mean_dice": 0.47142524550582016,
+  "mean_iou": 0.341926645780347,
+  "max_dice": 0.9630608912046038,
+  "min_dice": 0.0,
+  "max_iou": 0.9287535623218839,
+  "min_iou": 0.0,
+  "num_failures": 0,
+  "num_no_pred_mask": 2,
+  "by_label": {
+    "heart_ventricle_left": {
+      "count": 110,
+      "num_valid": 110,
+      "num_errors": 0,
+      "num_no_pred_mask": 0,
+      "mean_dice": 0.520530937474161,
+      "max_dice": 0.9630608912046038,
+      "min_dice": 0.0,
+      "mean_iou": 0.37663924446867975,
+      "max_iou": 0.9287535623218839,
+      "min_iou": 0.0
+    },
+    "heart_myocardium": {
+      "count": 110,
+      "num_valid": 110,
+      "num_errors": 0,
+      "num_no_pred_mask": 2,
+      "mean_dice": 0.41047862501702775,
+      "max_dice": 0.8838496752901096,
+      "min_dice": 0.0,
+      "mean_iou": 0.30010924588257487,
+      "max_iou": 0.7918733307897748,
+      "min_iou": 0.0
+    },
+    "heart_ventricle_right": {
+      "count": 86,
+      "num_valid": 86,
+      "num_errors": 0,
+      "num_no_pred_mask": 0,
+      "mean_dice": 0.48657061919477024,
+      "max_dice": 0.7636640060813379,
+      "min_dice": 0.0,
+      "mean_iou": 0.35101418221102537,
+      "max_iou": 0.617683226758485,
+      "min_iou": 0.0
+    }
+  },
+  "by_turn": {
+    "1": {
+      "count": 110,
+      "num_valid": 110,
+      "num_errors": 0,
+      "num_no_pred_mask": 0,
+      "mean_dice": 0.520530937474161,
+      "max_dice": 0.9630608912046038,
+      "min_dice": 0.0,
+      "mean_iou": 0.37663924446867975,
+      "max_iou": 0.9287535623218839,
+      "min_iou": 0.0
+    },
+    "2": {
+      "count": 110,
+      "num_valid": 110,
+      "num_errors": 0,
+      "num_no_pred_mask": 2,
+      "mean_dice": 0.41047862501702775,
+      "max_dice": 0.8838496752901096,
+      "min_dice": 0.0,
+      "mean_iou": 0.30010924588257487,
+      "max_iou": 0.7918733307897748,
+      "min_iou": 0.0
+    },
+    "3": {
+      "count": 86,
+      "num_valid": 86,
+      "num_errors": 0,
+      "num_no_pred_mask": 0,
+      "mean_dice": 0.48657061919477024,
+      "max_dice": 0.7636640060813379,
+      "min_dice": 0.0,
+      "mean_iou": 0.35101418221102537,
+      "max_iou": 0.617683226758485,
+      "min_iou": 0.0
+    }
+  },
+  "failure_reasons": {},
+  "split_source_counts": {
+    "test": 306
+  },
+  "dataset": "CMRxMotions",
+  "split": "test",
+  "max_samples": 0
+}

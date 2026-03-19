@@ -1,0 +1,84 @@
+{
+  "num_records": 92,
+  "mean_dice": 0.05272461115788052,
+  "mean_iou": 0.041656506954936,
+  "max_dice": 0.9267684636958554,
+  "min_dice": 0.0,
+  "max_iou": 0.8635307781649245,
+  "min_iou": 0.0,
+  "num_failures": 4,
+  "num_no_pred_mask": 71,
+  "by_label": {
+    "prostate_peripheral_zone": {
+      "count": 36,
+      "num_valid": 36,
+      "num_errors": 0,
+      "num_no_pred_mask": 28,
+      "mean_dice": 0.10178256518331223,
+      "max_dice": 0.9267684636958554,
+      "min_dice": 0.0,
+      "mean_iou": 0.08521162796050807,
+      "max_iou": 0.8635307781649245,
+      "min_iou": 0.0
+    },
+    "prostate_transition_zone": {
+      "count": 52,
+      "num_valid": 52,
+      "num_errors": 0,
+      "num_no_pred_mask": 43,
+      "mean_dice": 0.01876141221719704,
+      "max_dice": 0.48206218442731863,
+      "min_dice": 0.0,
+      "mean_iou": 0.011502961643386109,
+      "max_iou": 0.3175770308123249,
+      "min_iou": 0.0
+    },
+    "单标签追问": {
+      "count": 4,
+      "num_valid": 0,
+      "num_errors": 4,
+      "num_no_pred_mask": 0,
+      "mean_dice": null,
+      "max_dice": null,
+      "min_dice": null,
+      "mean_iou": null,
+      "max_iou": null,
+      "min_iou": null
+    }
+  },
+  "by_turn": {
+    "1": {
+      "count": 52,
+      "num_valid": 52,
+      "num_errors": 0,
+      "num_no_pred_mask": 43,
+      "mean_dice": 0.07973527944281843,
+      "max_dice": 0.9267684636958554,
+      "min_dice": 0.0,
+      "mean_iou": 0.06509991610366568,
+      "max_iou": 0.8635307781649245,
+      "min_iou": 0.0
+    },
+    "2": {
+      "count": 40,
+      "num_valid": 36,
+      "num_errors": 4,
+      "num_no_pred_mask": 28,
+      "mean_dice": 0.013709201412970209,
+      "max_dice": 0.2779692166322077,
+      "min_dice": 0.0,
+      "mean_iou": 0.007793804851215354,
+      "max_iou": 0.16141942369263607,
+      "min_iou": 0.0
+    }
+  },
+  "failure_reasons": {
+    "gt_label_not_found": 4
+  },
+  "split_source_counts": {
+    "test": 92
+  },
+  "dataset": "Prostate",
+  "split": "test",
+  "max_samples": 0
+}

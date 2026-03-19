@@ -1,0 +1,84 @@
+{
+  "num_records": 92,
+  "mean_dice": 0.1493189496737935,
+  "mean_iou": 0.09560804709117927,
+  "max_dice": 0.82421875,
+  "min_dice": 0.0,
+  "max_iou": 0.7009966777408638,
+  "min_iou": 0.0,
+  "num_failures": 4,
+  "num_no_pred_mask": 0,
+  "by_label": {
+    "prostate_peripheral_zone": {
+      "count": 36,
+      "num_valid": 36,
+      "num_errors": 0,
+      "num_no_pred_mask": 0,
+      "mean_dice": 0.0954615408135257,
+      "max_dice": 0.48074245939675175,
+      "min_dice": 0.0,
+      "mean_iou": 0.05645899004896468,
+      "max_iou": 0.3164324984728161,
+      "min_iou": 0.0
+    },
+    "prostate_transition_zone": {
+      "count": 52,
+      "num_valid": 52,
+      "num_errors": 0,
+      "num_no_pred_mask": 0,
+      "mean_dice": 0.18660484811551736,
+      "max_dice": 0.82421875,
+      "min_dice": 0.0,
+      "mean_iou": 0.12271124042809708,
+      "max_iou": 0.7009966777408638,
+      "min_iou": 0.0
+    },
+    "单标签追问": {
+      "count": 4,
+      "num_valid": 0,
+      "num_errors": 4,
+      "num_no_pred_mask": 0,
+      "mean_dice": null,
+      "max_dice": null,
+      "min_dice": null,
+      "mean_iou": null,
+      "max_iou": null,
+      "min_iou": null
+    }
+  },
+  "by_turn": {
+    "1": {
+      "count": 52,
+      "num_valid": 52,
+      "num_errors": 0,
+      "num_no_pred_mask": 0,
+      "mean_dice": 0.1257254315094908,
+      "max_dice": 0.7795527156549521,
+      "min_dice": 0.0,
+      "mean_iou": 0.07852891550882118,
+      "max_iou": 0.6387434554973822,
+      "min_iou": 0.0
+    },
+    "2": {
+      "count": 40,
+      "num_valid": 36,
+      "num_errors": 4,
+      "num_no_pred_mask": 0,
+      "mean_dice": 0.18339847591111957,
+      "max_dice": 0.82421875,
+      "min_dice": 0.0,
+      "mean_iou": 0.1202779038212521,
+      "max_iou": 0.7009966777408638,
+      "min_iou": 0.0
+    }
+  },
+  "failure_reasons": {
+    "gt_label_not_found": 4
+  },
+  "split_source_counts": {
+    "test": 92
+  },
+  "dataset": "Prostate",
+  "split": "test",
+  "max_samples": 0
+}

@@ -1,3 +1,5 @@
+# filename: .gitignore
+
 # 先忽略所有内容
 *
 
@@ -19,10 +21,6 @@
 !temp_work/**
 !work/**
 
-# 忽略 work 下任意子目录中名为 outputs 的文件夹及其内容
-work/**/outputs/
-work/**/outputs/**
-
-# 重新允许 medsam3_my_lora 的 outputs 及其内容
-!work/medsam3_my_lora/outputs/
-!work/medsam3_my_lora/outputs/**
+# 仅忽略 work 下各类 outputs 目录中的 per_case 结果
+work/**/outputs/**/per_case/
+work/**/outputs/**/per_case/**

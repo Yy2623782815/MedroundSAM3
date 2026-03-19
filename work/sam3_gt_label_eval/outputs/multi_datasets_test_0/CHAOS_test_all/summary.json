@@ -1,0 +1,132 @@
+{
+  "num_records": 124,
+  "mean_dice": 0.5554160029724412,
+  "mean_iou": 0.526307624191483,
+  "max_dice": 0.9838709677419355,
+  "min_dice": 0.0,
+  "max_iou": 0.9682539682539683,
+  "min_iou": 0.0,
+  "num_failures": 4,
+  "num_no_pred_mask": 49,
+  "by_label": {
+    "kidney_right": {
+      "count": 27,
+      "num_valid": 27,
+      "num_errors": 0,
+      "num_no_pred_mask": 22,
+      "mean_dice": 0.17615431356654884,
+      "max_dice": 0.9750692520775623,
+      "min_dice": 0.0,
+      "mean_iou": 0.16803802827701292,
+      "max_iou": 0.9513513513513514,
+      "min_iou": 0.0
+    },
+    "kidney_left": {
+      "count": 26,
+      "num_valid": 26,
+      "num_errors": 0,
+      "num_no_pred_mask": 26,
+      "mean_dice": 0.0,
+      "max_dice": 0.0,
+      "min_dice": 0.0,
+      "mean_iou": 0.0,
+      "max_iou": 0.0,
+      "min_iou": 0.0
+    },
+    "liver": {
+      "count": 43,
+      "num_valid": 43,
+      "num_errors": 0,
+      "num_no_pred_mask": 0,
+      "mean_dice": 0.9265295912296905,
+      "max_dice": 0.9838709677419355,
+      "min_dice": 0.7246376811594203,
+      "mean_iou": 0.8702598349223172,
+      "max_iou": 0.9682539682539683,
+      "min_iou": 0.5681818181818182
+    },
+    "spleen": {
+      "count": 24,
+      "num_valid": 24,
+      "num_errors": 0,
+      "num_no_pred_mask": 1,
+      "mean_dice": 0.9188742278133102,
+      "max_dice": 0.981737686773658,
+      "min_dice": 0.0,
+      "mean_iou": 0.883279801576624,
+      "max_iou": 0.9641304347826087,
+      "min_iou": 0.0
+    },
+    "单标签追问": {
+      "count": 4,
+      "num_valid": 0,
+      "num_errors": 4,
+      "num_no_pred_mask": 0,
+      "mean_dice": null,
+      "max_dice": null,
+      "min_dice": null,
+      "mean_iou": null,
+      "max_iou": null,
+      "min_iou": null
+    }
+  },
+  "by_turn": {
+    "1": {
+      "count": 51,
+      "num_valid": 51,
+      "num_errors": 0,
+      "num_no_pred_mask": 7,
+      "mean_dice": 0.8000466275984102,
+      "max_dice": 0.9838709677419355,
+      "min_dice": 0.0,
+      "mean_iou": 0.7519063396436805,
+      "max_iou": 0.9682539682539683,
+      "min_iou": 0.0
+    },
+    "2": {
+      "count": 45,
+      "num_valid": 41,
+      "num_errors": 4,
+      "num_no_pred_mask": 23,
+      "mean_dice": 0.4191939936674305,
+      "max_dice": 0.981737686773658,
+      "min_dice": 0.0,
+      "mean_iou": 0.4015164325300204,
+      "max_iou": 0.9641304347826087,
+      "min_iou": 0.0
+    },
+    "3": {
+      "count": 21,
+      "num_valid": 21,
+      "num_errors": 0,
+      "num_no_pred_mask": 18,
+      "mean_dice": 0.13885789981777408,
+      "max_dice": 0.9742465753424657,
+      "min_dice": 0.0,
+      "mean_iou": 0.13507717827477772,
+      "max_iou": 0.9497863247863247,
+      "min_iou": 0.0
+    },
+    "4": {
+      "count": 7,
+      "num_valid": 7,
+      "num_errors": 0,
+      "num_no_pred_mask": 1,
+      "mean_dice": 0.8206532446623037,
+      "max_dice": 0.9725,
+      "min_dice": 0.0,
+      "mean_iou": 0.787271014807013,
+      "max_iou": 0.9464720194647201,
+      "min_iou": 0.0
+    }
+  },
+  "failure_reasons": {
+    "gt_label_not_found": 4
+  },
+  "split_source_counts": {
+    "test": 124
+  },
+  "dataset": "CHAOS",
+  "split": "test",
+  "max_samples": 0
+}

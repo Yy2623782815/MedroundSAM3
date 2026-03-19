@@ -1,0 +1,84 @@
+{
+  "num_records": 92,
+  "mean_dice": 0.46843060541045073,
+  "mean_iou": 0.4176643794703736,
+  "max_dice": 0.9749799839871898,
+  "min_dice": 0.0,
+  "max_iou": 0.9511814098808826,
+  "min_iou": 0.0,
+  "num_failures": 4,
+  "num_no_pred_mask": 36,
+  "by_label": {
+    "prostate_peripheral_zone": {
+      "count": 36,
+      "num_valid": 36,
+      "num_errors": 0,
+      "num_no_pred_mask": 24,
+      "mean_dice": 0.26617886175643324,
+      "max_dice": 0.9143173023770038,
+      "min_dice": 0.0,
+      "mean_iou": 0.23430889171429867,
+      "max_iou": 0.8421588594704684,
+      "min_iou": 0.0
+    },
+    "prostate_transition_zone": {
+      "count": 52,
+      "num_valid": 52,
+      "num_errors": 0,
+      "num_no_pred_mask": 12,
+      "mean_dice": 0.6084510433247705,
+      "max_dice": 0.9749799839871898,
+      "min_dice": 0.0,
+      "mean_iou": 0.5446027940707332,
+      "max_iou": 0.9511814098808826,
+      "min_iou": 0.0
+    },
+    "单标签追问": {
+      "count": 4,
+      "num_valid": 0,
+      "num_errors": 4,
+      "num_no_pred_mask": 0,
+      "mean_dice": null,
+      "max_dice": null,
+      "min_dice": null,
+      "mean_iou": null,
+      "max_iou": null,
+      "min_iou": null
+    }
+  },
+  "by_turn": {
+    "1": {
+      "count": 52,
+      "num_valid": 52,
+      "num_errors": 0,
+      "num_no_pred_mask": 34,
+      "mean_dice": 0.26999032128968115,
+      "max_dice": 0.9391339869281046,
+      "min_dice": 0.0,
+      "mean_iou": 0.2398203947622889,
+      "max_iou": 0.8852522140931844,
+      "min_iou": 0.0
+    },
+    "2": {
+      "count": 40,
+      "num_valid": 36,
+      "num_errors": 4,
+      "num_no_pred_mask": 2,
+      "mean_dice": 0.7550665713626735,
+      "max_dice": 0.9749799839871898,
+      "min_dice": 0.0,
+      "mean_iou": 0.6745501351598294,
+      "max_iou": 0.9511814098808826,
+      "min_iou": 0.0
+    }
+  },
+  "failure_reasons": {
+    "gt_label_not_found": 4
+  },
+  "split_source_counts": {
+    "test": 92
+  },
+  "dataset": "Prostate",
+  "split": "test",
+  "max_samples": 0
+}

@@ -1,0 +1,132 @@
+{
+  "num_records": 124,
+  "mean_dice": 0.3452766652718667,
+  "mean_iou": 0.27507290310784677,
+  "max_dice": 0.9703081232492997,
+  "min_dice": 0.0,
+  "max_iou": 0.9423286180631121,
+  "min_iou": 0.0,
+  "num_failures": 4,
+  "num_no_pred_mask": 5,
+  "by_label": {
+    "kidney_right": {
+      "count": 27,
+      "num_valid": 27,
+      "num_errors": 0,
+      "num_no_pred_mask": 4,
+      "mean_dice": 0.18033079518006026,
+      "max_dice": 0.9316239316239316,
+      "min_dice": 0.0,
+      "mean_iou": 0.1428919791725115,
+      "max_iou": 0.872,
+      "min_iou": 0.0
+    },
+    "kidney_left": {
+      "count": 26,
+      "num_valid": 26,
+      "num_errors": 0,
+      "num_no_pred_mask": 1,
+      "mean_dice": 0.027953537216659975,
+      "max_dice": 0.44337811900191937,
+      "min_dice": 0.0,
+      "mean_iou": 0.017305258782091174,
+      "max_iou": 0.2848335388409371,
+      "min_iou": 0.0
+    },
+    "liver": {
+      "count": 43,
+      "num_valid": 43,
+      "num_errors": 0,
+      "num_no_pred_mask": 0,
+      "mean_dice": 0.6782865968917612,
+      "max_dice": 0.9553288176283975,
+      "min_dice": 0.0,
+      "mean_iou": 0.5583657783861874,
+      "max_iou": 0.9144780039395929,
+      "min_iou": 0.0
+    },
+    "spleen": {
+      "count": 24,
+      "num_valid": 24,
+      "num_errors": 0,
+      "num_no_pred_mask": 0,
+      "mean_dice": 0.2779646970326454,
+      "max_dice": 0.9703081232492997,
+      "min_dice": 0.0,
+      "mean_iou": 0.19545832234764068,
+      "max_iou": 0.9423286180631121,
+      "min_iou": 0.0
+    },
+    "单标签追问": {
+      "count": 4,
+      "num_valid": 0,
+      "num_errors": 4,
+      "num_no_pred_mask": 0,
+      "mean_dice": null,
+      "max_dice": null,
+      "min_dice": null,
+      "mean_iou": null,
+      "max_iou": null,
+      "min_iou": null
+    }
+  },
+  "by_turn": {
+    "1": {
+      "count": 51,
+      "num_valid": 51,
+      "num_errors": 0,
+      "num_no_pred_mask": 2,
+      "mean_dice": 0.638156905378128,
+      "max_dice": 0.9553288176283975,
+      "min_dice": 0.0,
+      "mean_iou": 0.526944242898431,
+      "max_iou": 0.9144780039395929,
+      "min_iou": 0.0
+    },
+    "2": {
+      "count": 45,
+      "num_valid": 41,
+      "num_errors": 4,
+      "num_no_pred_mask": 2,
+      "mean_dice": 0.15254565118569813,
+      "max_dice": 0.8946910356832027,
+      "min_dice": 0.0,
+      "mean_iou": 0.10359054978161977,
+      "max_iou": 0.8094488188976378,
+      "min_iou": 0.0
+    },
+    "3": {
+      "count": 21,
+      "num_valid": 21,
+      "num_errors": 0,
+      "num_no_pred_mask": 1,
+      "mean_dice": 0.06519310754604872,
+      "max_dice": 0.9703081232492997,
+      "min_dice": 0.0,
+      "mean_iou": 0.05543088055026245,
+      "max_iou": 0.9423286180631121,
+      "min_iou": 0.0
+    },
+    "4": {
+      "count": 7,
+      "num_valid": 7,
+      "num_errors": 0,
+      "num_no_pred_mask": 0,
+      "mean_dice": 0.1805386716084046,
+      "max_dice": 0.3572963935992357,
+      "min_dice": 0.0,
+      "mean_iou": 0.10333299321710163,
+      "max_iou": 0.21750508868857227,
+      "min_iou": 0.0
+    }
+  },
+  "failure_reasons": {
+    "gt_label_not_found": 4
+  },
+  "split_source_counts": {
+    "test": 124
+  },
+  "dataset": "CHAOS",
+  "split": "test",
+  "max_samples": 0
+}

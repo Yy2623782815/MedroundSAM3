@@ -1,0 +1,108 @@
+{
+  "num_records": 834,
+  "mean_dice": 0.0761667394432452,
+  "mean_iou": 0.0626548143990989,
+  "max_dice": 0.9266569707043424,
+  "min_dice": 0.0,
+  "max_iou": 0.8633372048006195,
+  "min_iou": 0.0,
+  "num_failures": 3,
+  "num_no_pred_mask": 244,
+  "by_label": {
+    "lung_left": {
+      "count": 337,
+      "num_valid": 337,
+      "num_errors": 0,
+      "num_no_pred_mask": 109,
+      "mean_dice": 0.004204910195732984,
+      "max_dice": 0.8660287081339713,
+      "min_dice": 0.0,
+      "mean_iou": 0.003086988671956748,
+      "max_iou": 0.7637130801687764,
+      "min_iou": 0.0
+    },
+    "lung_right": {
+      "count": 346,
+      "num_valid": 346,
+      "num_errors": 0,
+      "num_no_pred_mask": 108,
+      "mean_dice": 0.0015875145143750876,
+      "max_dice": 0.024747717443536762,
+      "min_dice": 0.0,
+      "mean_iou": 0.0007965428117197512,
+      "max_iou": 0.012528889429509792,
+      "min_iou": 0.0
+    },
+    "lung_infections": {
+      "count": 148,
+      "num_valid": 148,
+      "num_errors": 0,
+      "num_no_pred_mask": 27,
+      "mean_dice": 0.41437990350946596,
+      "max_dice": 0.9266569707043424,
+      "min_dice": 0.0,
+      "mean_iou": 0.34290697142126164,
+      "max_iou": 0.8633372048006195,
+      "min_iou": 0.0
+    },
+    "单标签追问": {
+      "count": 3,
+      "num_valid": 0,
+      "num_errors": 3,
+      "num_no_pred_mask": 0,
+      "mean_dice": null,
+      "max_dice": null,
+      "min_dice": null,
+      "mean_iou": null,
+      "max_iou": null,
+      "min_iou": null
+    }
+  },
+  "by_turn": {
+    "1": {
+      "count": 346,
+      "num_valid": 346,
+      "num_errors": 0,
+      "num_no_pred_mask": 117,
+      "mean_dice": 0.004095533918965362,
+      "max_dice": 0.8660287081339713,
+      "min_dice": 0.0,
+      "mean_iou": 0.003006691278755561,
+      "max_iou": 0.7637130801687764,
+      "min_iou": 0.0
+    },
+    "2": {
+      "count": 341,
+      "num_valid": 338,
+      "num_errors": 3,
+      "num_no_pred_mask": 101,
+      "mean_dice": 0.0016250888224076342,
+      "max_dice": 0.024747717443536762,
+      "min_dice": 0.0,
+      "mean_iou": 0.0008153958960208105,
+      "max_iou": 0.012528889429509792,
+      "min_iou": 0.0
+    },
+    "3": {
+      "count": 147,
+      "num_valid": 147,
+      "num_errors": 0,
+      "num_no_pred_mask": 26,
+      "mean_dice": 0.4171988144176937,
+      "max_dice": 0.9266569707043424,
+      "min_dice": 0.0,
+      "mean_iou": 0.34523967190712057,
+      "max_iou": 0.8633372048006195,
+      "min_iou": 0.0
+    }
+  },
+  "failure_reasons": {
+    "gt_label_not_found": 3
+  },
+  "split_source_counts": {
+    "test": 834
+  },
+  "dataset": "COVID19",
+  "split": "test",
+  "max_samples": 0
+}
