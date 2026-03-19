@@ -22,6 +22,16 @@ from medsam3_my_lora_infer import MedSAM3MyLoRAInferencer
 from metrics import dice_score, iou_score
 from viz import visualize
 
+DEFAULT_DATASETS = [
+    "AMOS2022",
+    "BraTS",
+    "CHAOS",
+    "CMRxMotions",
+    "COVID19",
+    "Prostate",
+    "SegRap2023",
+]
+
 
 def build_medsam3_my_lora_model(
     sam3_repo_root: str,
@@ -545,10 +555,54 @@ def aggregate_dataset_summaries(dataset_summaries):
     return agg
 
 
+def discover_available_datasets(data_root: str):
+    if not os.path.isdir(data_root):
+        return []
+
+    datasets = []
+    for name in sorted(os.listdir(data_root)):
+        ds_root = os.path.join(data_root, name)
+        if not os.path.isdir(ds_root):
+            continue
+        ds_json = os.path.join(ds_root, f"MultiEN_{name}.json")
+        if os.path.isfile(ds_json):
+            datasets.append(name)
+    return datasets
+
+
+def resolve_target_datasets(args):
+    if args.use_all_datasets:
+        auto_datasets = discover_available_datasets(args.data_root)
+        if auto_datasets:
+            print(f"[dataset] use_all_datasets=True, auto discovered: {auto_datasets}")
+            return auto_datasets
+        print(
+            "[dataset] use_all_datasets=True but no MultiEN_*.json discovered under data_root. "
+            f"Fallback to default list: {DEFAULT_DATASETS}"
+        )
+        return DEFAULT_DATASETS
+
+    if args.datasets and len(args.datasets) > 0:
+        return args.datasets
+
+    return DEFAULT_DATASETS
+
+
 def parse_args():
     parser = argparse.ArgumentParser()
     parser.add_argument("--data_root", type=str, required=True)
-    parser.add_argument("--datasets", type=str, nargs="+", required=True, help="One or more dataset names")
+    parser.add_argument(
+        "--datasets",
+        type=str,
+        nargs="+",
+        default=None,
+        help="One or more dataset names. If omitted, fallback to default dataset list.",
+    )
+    parser.add_argument(
+        "--use_all_datasets",
+        action="store_true",
+        help="Evaluate all datasets auto-discovered from data_root/*/MultiEN_{dataset}.json.",
+    )
     parser.add_argument("--split", type=str, default="test", choices=["training", "test", "all"])
     parser.add_argument(
         "--max_samples",
@@ -588,6 +642,9 @@ def parse_args():
 def main():
     args = parse_args()
     ensure_dir(args.output_dir)
+    target_datasets = resolve_target_datasets(args)
+
+    print(f"[dataset] final target datasets: {target_datasets}")
 
     inferencer = build_medsam3_my_lora_model(
         sam3_repo_root=args.sam3_repo_root,
@@ -608,7 +665,7 @@ def main():
     dataset_summaries = {}
     max_tag = "all" if args.max_samples <= 0 else str(args.max_samples)
 
-    for dataset_name in args.datasets:
+    for dataset_name in target_datasets:
         dataset_out_dir = os.path.join(args.output_dir, f"{dataset_name}_{args.split}_{max_tag}")
         ensure_dir(dataset_out_dir)
 

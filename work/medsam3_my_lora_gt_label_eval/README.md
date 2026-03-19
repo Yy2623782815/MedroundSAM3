@@ -54,7 +54,15 @@ DATA_ROOT=/root/autodl-tmp/data/SAM3_data \
 OUTPUT_ROOT=/root/autodl-tmp/work/medsam3_my_lora_gt_label_eval/outputs \
 SPLIT=test \
 MAX_SAMPLES=20 \
+DATASETS="CHAOS BraTS" \
 LORA_CHECKPOINT_PATH=/root/autodl-tmp/work/medsam3_my_lora/outputs/chaos_smoke/checkpoints/best.pt \
+bash /root/autodl-tmp/work/medsam3_my_lora_gt_label_eval/scripts/run_eval_medsam3_my_lora_multi_datasets.sh
+```
+
+如果你想自动评测 `data_root` 下全部可发现数据集：
+
+```bash
+USE_ALL_DATASETS=1 \
 bash /root/autodl-tmp/work/medsam3_my_lora_gt_label_eval/scripts/run_eval_medsam3_my_lora_multi_datasets.sh
 ```
 
@@ -85,6 +93,7 @@ python eval_medsam3_my_lora_gt_label_batch.py \
 
 - `--data_root`: 数据集根目录（内部应有 `dataset_name/MultiEN_{dataset_name}.json`）
 - `--datasets`: 可一次传多个数据集名，便于横向对比
+- `--use_all_datasets`: 自动扫描 `data_root/*/MultiEN_{dataset}.json` 并评测全部数据集
 - `--split`: `training` / `test` / `all`
 - `--max_samples`: 每个 split 最多样本数，`<=0` 表示全量
 - `--sam3_repo_root`: `repos/MedSAM3` 根路径
@@ -122,5 +131,5 @@ python eval_medsam3_my_lora_gt_label_batch.py \
 ## 6. 批量评测建议
 
 - 优先使用 shell 脚本 + 环境变量覆盖路径。
-- 通过 `--datasets` 同时评测多个数据集，保持统一阈值。
+- 若只评测指定数据集，设置 `DATASETS="CHAOS BraTS"`；若全量评测，设置 `USE_ALL_DATASETS=1`。
 - 输出根目录按时间戳或实验名拆分，便于后续对比不同 LoRA checkpoint。

@@ -18,21 +18,17 @@ RESOLUTION="${RESOLUTION:-1008}"
 DETECTION_THRESHOLD="${DETECTION_THRESHOLD:-0.5}"
 NMS_IOU_THRESHOLD="${NMS_IOU_THRESHOLD:-0.5}"
 
-DATASETS=(
-  AMOS2022
-  BraTS
-  CHAOS
-  CMRxMotions
-  COVID19
-  Prostate
-  SegRap2023
-)
+# 指定评测数据集（空表示交给 Python 默认列表）
+# 例如：DATASETS="CHAOS BraTS"
+DATASETS="${DATASETS:-}"
+# 为 1 时自动评测 data_root 下所有可发现数据集
+USE_ALL_DATASETS="${USE_ALL_DATASETS:-0}"
 
 cd /root/autodl-tmp/work/medsam3_my_lora_gt_label_eval
 
-python eval_medsam3_my_lora_gt_label_batch.py \
+CMD=(
+python eval_medsam3_my_lora_gt_label_batch.py
   --data_root "${DATA_ROOT}" \
-  --datasets "${DATASETS[@]}" \
   --split "${SPLIT}" \
   --max_samples "${MAX_SAMPLES}" \
   --output_dir "${OUTPUT_ROOT}" \
@@ -45,3 +41,15 @@ python eval_medsam3_my_lora_gt_label_batch.py \
   --resolution "${RESOLUTION}" \
   --detection_threshold "${DETECTION_THRESHOLD}" \
   --nms_iou_threshold "${NMS_IOU_THRESHOLD}"
+)
+
+if [ "${USE_ALL_DATASETS}" = "1" ]; then
+  CMD+=(--use_all_datasets)
+elif [ -n "${DATASETS}" ]; then
+  # shellcheck disable=SC2206
+  DATASET_ARR=(${DATASETS})
+  CMD+=(--datasets "${DATASET_ARR[@]}")
+fi
+
+echo "[run] ${CMD[*]}"
+"${CMD[@]}"
