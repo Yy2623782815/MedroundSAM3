@@ -99,6 +99,11 @@ def cleanup_distributed() -> None:
 def maybe_wrap_ddp(model: torch.nn.Module, distributed: bool, local_rank: int) -> torch.nn.Module:
     if not distributed:
         return model
+    # DDP with device_ids requires all parameters to be on the target CUDA device.
+    expected_device = torch.device(f"cuda:{local_rank}")
+    model_devices = {p.device for p in model.parameters()}
+    if any(d != expected_device for d in model_devices):
+        model = model.to(expected_device)
     return torch.nn.parallel.DistributedDataParallel(
         model,
         device_ids=[local_rank],
@@ -312,6 +317,7 @@ def main() -> None:
         train_norm=bool(cfg["lora"].get("train_norm", False)),
         load_from_hf=bool(cfg["model"].get("load_from_hf", False)),
     )
+    model = model.to(device)
     model = maybe_wrap_ddp(model, dist_ctx["distributed"], dist_ctx["local_rank"])
 
     if dist_ctx["is_main"]:
