@@ -1,0 +1,128 @@
+{
+  "datasets": [
+    "AMOS2022",
+    "BraTS",
+    "CHAOS",
+    "CMRxMotions",
+    "COVID19",
+    "Prostate",
+    "SegRap2023"
+  ],
+  "stats": {
+    "AMOS2022": {
+      "training": {
+        "num_items": 3155,
+        "kept": 18360,
+        "skip_empty": 0,
+        "skip_fail": 0,
+        "skip_invalid": 59
+      },
+      "test": {
+        "num_items": 422,
+        "kept": 2352,
+        "skip_empty": 0,
+        "skip_fail": 0,
+        "skip_invalid": 5
+      }
+    },
+    "BraTS": {
+      "training": {
+        "num_items": 5761,
+        "kept": 12889,
+        "skip_empty": 0,
+        "skip_fail": 0,
+        "skip_invalid": 718
+      },
+      "test": {
+        "num_items": 650,
+        "kept": 1452,
+        "skip_empty": 0,
+        "skip_fail": 0,
+        "skip_invalid": 65
+      }
+    },
+    "CHAOS": {
+      "training": {
+        "num_items": 435,
+        "kept": 1034,
+        "skip_empty": 0,
+        "skip_fail": 0,
+        "skip_invalid": 56
+      },
+      "test": {
+        "num_items": 51,
+        "kept": 120,
+        "skip_empty": 0,
+        "skip_fail": 0,
+        "skip_invalid": 4
+      }
+    },
+    "CMRxMotions": {
+      "training": {
+        "num_items": 1094,
+        "kept": 2989,
+        "skip_empty": 0,
+        "skip_fail": 0,
+        "skip_invalid": 0
+      },
+      "test": {
+        "num_items": 110,
+        "kept": 306,
+        "skip_empty": 0,
+        "skip_fail": 0,
+        "skip_invalid": 0
+      }
+    },
+    "COVID19": {
+      "training": {
+        "num_items": 2480,
+        "kept": 6491,
+        "skip_empty": 0,
+        "skip_fail": 0,
+        "skip_invalid": 21
+      },
+      "test": {
+        "num_items": 346,
+        "kept": 831,
+        "skip_empty": 0,
+        "skip_fail": 0,
+        "skip_invalid": 3
+      }
+    },
+    "Prostate": {
+      "training": {
+        "num_items": 419,
+        "kept": 660,
+        "skip_empty": 0,
+        "skip_fail": 0,
+        "skip_invalid": 66
+      },
+      "test": {
+        "num_items": 53,
+        "kept": 88,
+        "skip_empty": 0,
+        "skip_fail": 0,
+        "skip_invalid": 4
+      }
+    },
+    "SegRap2023": {
+      "training": {
+        "num_items": 12482,
+        "kept": 58468,
+        "skip_empty": 0,
+        "skip_fail": 0,
+        "skip_invalid": 1085
+      },
+      "test": {
+        "num_items": 1435,
+        "kept": 6616,
+        "skip_empty": 0,
+        "skip_fail": 0,
+        "skip_invalid": 128
+      }
+    }
+  },
+  "train": 90802,
+  "val": 10089,
+  "test": 11765
+}
